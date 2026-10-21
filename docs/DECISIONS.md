@@ -21,13 +21,15 @@ Short log of choices and why. Add a line when something changes.
 | 13 | 2026-10-22 | Database tests run the real migrations in PGlite (Postgres in WebAssembly) | Tests RLS, constraints and atomic functions in CI without Docker |
 | 14 | 2026-10-22 | "Mark as paid" goes through `pay_recurring(item, expected_due, tx)` | Saves the payment and advances the reminder together; a second tap or device can't record it twice |
 | 15 | 2026-10-22 | Quick text also matches category names ("groceries" → Groceries) when there's no recipient memory | Useful from day one, before anything is remembered; documented in MONEY_RULES |
+| 16 | 2026-10-22 | Spreadsheets: Papa Parse (CSV) + read-excel-file (.xlsx); old .xls not supported | The maintained SheetJS build is only on its own CDN (unreachable from the build sandbox) and the npm copy has known advisories. .xls files can be saved as .xlsx/CSV; revisit if your bank only offers .xls |
+| 17 | 2026-10-22 | Import duplicates: fingerprint per row, and "possibly entered" only suggests skipping | Two genuine ₹120 coffees on one day stay two; equal amount/date never deletes or merges anything |
 
 ## Open — needed before the phase shown
 
 | Question | Needed by | Default if not answered |
 | --- | --- | --- |
-| Which bank(s) and card(s)? Which download formats do they offer (CSV/XLS)? | Phase 3 | Build the generic column-mapping importer; verify with your files later |
-| New GitHub repo, or replace the old repo's contents? | Phase 0 | New repo `finance-tracker`; old repo kept read-only for reference |
+| Which bank(s) and card(s)? Which download formats do they offer (CSV/XLSX/XLS)? | Live use of Phase 3 | Generic column-mapping importer is built; verify with your files; .xls needs saving as .xlsx/CSV |
+| ~~New GitHub repo or replace?~~ Decided 2026-10-21: same repo; old code kept on branch `legacy-v1` | — | — |
 | Is the old Supabase project (`mpjjetxtpekrxeyivlkv`) deleted? | Phase 0 | Create a new project; delete the old one |
 | Want the AI assistant at all? Willing to use Gemini's paid tier (needed for real financial data)? | Phase 6 | Not built |
 | Starter category list OK? | Phase 1 | List in ARCHITECTURE.md |

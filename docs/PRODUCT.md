@@ -77,7 +77,7 @@ For the selected month (default: current month):
   - *Error* — row could not be read (bad date or amount); shown with the reason, never silently dropped.
 - Recipient memory pre-fills categories; uncategorised rows can be filled in the preview.
 - **Undo import** removes exactly the rows that import added.
-- PDF statements are **not** supported in v1. Most banks offer CSV/XLS download.
+- PDF statements are **not** supported in v1, and neither are old Excel `.xls` files (save them as .xlsx or CSV). Most banks offer CSV or Excel download.
 
 ### 9. Export
 - Export all transactions as CSV (for Excel or Sheets).

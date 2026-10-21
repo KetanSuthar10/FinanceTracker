@@ -49,14 +49,17 @@ How it was checked: database tests (pay is atomic, the same occurrence can't be 
 
 **Done when:** a month's rent, an EMI and a card bill have been tracked through Upcoming → Mark as paid.
 
-## Phase 3 — Statement import ⬜
-- [ ] Upload CSV/XLSX; column mapping saved per account
-- [ ] Parse with row-level errors (bad date, bad amount, both debit and credit filled)
-- [ ] Statuses: New / Already imported / Possibly already entered / Error
-- [ ] Categories pre-filled from recipient memory; editable in preview
-- [ ] Atomic commit (`commit_import`); re-import of the same file adds 0 rows
-- [ ] Import history with Undo
-- [ ] Tested with your real bank file and real card file (kept locally, never committed)
+## Phase 3 — Statement import 🟨 (built; needs your real files)
+- [x] Upload CSV/XLSX (read on the device); column mapping saved per account by column name
+- [x] Parse with row-level errors (bad date, bad amount, both debit and credit filled); blank/summary lines counted, never silently dropped
+- [x] Statuses: New / Already imported / Possibly already entered (one-to-one, ±3 days) / Error
+- [x] Names suggested from bank narrations (UPI, NEFT, POS); categories from recipient memory; editable in review
+- [x] Card-bill payments and ATM withdrawals become transfers; a card statement's payment row matches the bank-side transfer
+- [x] Atomic, retry-safe commit (`commit_import`, migration 3); re-import of the same file adds 0 rows
+- [x] Import history with Undo (removes exactly that import)
+- [ ] Owner: test with your real bank and card files (kept locally, never committed)
+
+How it was checked: unit tests for dates, amounts, headers, column guessing, fingerprints, name suggestions, statuses and transfer direction. Database tests show the import is all-or-nothing, a retry with the same batch writes nothing, a duplicate row fails the whole import, another user's account is refused, and undo keeps manual entries. A browser run imported a synthetic bank CSV, a card CSV and an .xlsx at 360px and 1366px. The bank balance afterwards matched the statement's own closing balance, ₹5,459.50.
 
 **Done when:** a full month's statement for your main bank is imported with no duplicates against your manual entries.
 
@@ -77,6 +80,7 @@ How it was checked: database tests (pay is atomic, the same occurrence can't be 
 - [ ] "Explain my month" button on Home — read-only text, no writes
 
 ## Change log
+- 2026-10-22: Phase 3 built: CSV/XLSX statement import with review, duplicates, atomic commit and undo (migration 3).
 - 2026-10-22: Phase 2 built: reminders, Upcoming, mark as paid / skip (migration 2), budgets, Home due-soon / budgets / trend.
 - 2026-10-22: Phase 1 built: accounts, categories, recipients with aliases, quick add (text + voice), transactions, Home.
 - 2026-10-21: Phase 0 code: scaffold, schema + PGlite tests, sign-in, shell. Money/date helpers and the balance formula added early, because the schema tests need them.

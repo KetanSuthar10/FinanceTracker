@@ -10,6 +10,7 @@ import { SettingsPage } from '../features/settings/SettingsPage';
 import { AddTransactionPage, EditTransactionPage } from '../features/transactions/TransactionPages';
 import { TransactionsPage } from '../features/transactions/TransactionsPage';
 import { BudgetsPage } from '../features/budgets/BudgetsPage';
+import { ImportPage } from '../features/import/ImportPage';
 import { PayRecurringPage } from '../features/upcoming/PayRecurringPage';
 import { RecurringEditPage } from '../features/upcoming/RecurringEditPage';
 import { UpcomingPage } from '../features/upcoming/UpcomingPage';
@@ -37,6 +38,7 @@ export const router = createBrowserRouter([
       { path: 'recurring/:id', element: <RecurringEditPage /> },
       { path: 'recurring/:id/pay', element: <PayRecurringPage /> },
       { path: 'budgets', element: <BudgetsPage /> },
+      { path: 'import', element: <ImportPage /> },
       { path: 'more', element: <MorePage /> },
       { path: '*', element: <NotFoundPage /> },
     ],

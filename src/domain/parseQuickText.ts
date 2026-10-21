@@ -250,6 +250,11 @@ function stem(word: string): string {
   return word;
 }
 
+/** A category whose name (or first word) matches one of the words: "groceries" → Groceries, "fee" → Fees & interest. */
+export function guessCategory(text: string, categories: ParseContext['categories'], kind: Category['kind']) {
+  return categoryFromWords(normalizeName(text).split(' ').filter(Boolean), categories, kind);
+}
+
 function categoryFromWords(words: string[], categories: ParseContext['categories'], kind: Category['kind']) {
   const stems = new Set(words.map(stem));
   return categories.find((c) => {

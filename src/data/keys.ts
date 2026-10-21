@@ -7,6 +7,7 @@ export const keys = {
   settings: ['settings'] as const,
   recurring: ['recurring'] as const,
   budgets: ['budgets'] as const,
+  importBatches: ['import-batches'] as const,
   transactions: ['transactions'] as const,
   transactionsBetween: (from: string, through: string) => ['transactions', 'between', from, through] as const,
   transaction: (id: string) => ['transactions', 'one', id] as const,
