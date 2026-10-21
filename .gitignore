@@ -1,0 +1,16 @@
+node_modules/
+dist/
+coverage/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea/
+supabase/.temp/
+# Real statements and exports never go into Git
+private/
+*.statement.csv
+*.statement.xlsx
