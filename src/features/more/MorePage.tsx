@@ -1,44 +1,69 @@
+import { ChevronRight, LogOut } from 'lucide-react';
 import { useState } from 'react';
-import { LogOut } from 'lucide-react';
+import { Link } from 'react-router';
 import { Button } from '../../components/Button';
+import { Card, PageHeader } from '../../components/Card';
 import { ErrorNotice } from '../../components/ErrorNotice';
 import { useAuth } from '../auth/authContext';
+import { MORE_LINKS } from './links';
+
+
 
 export function MorePage() {
+  return (
+    <div className="mx-auto max-w-2xl space-y-5">
+      <PageHeader title="More" />
+      <Card>
+        <ul className="-mx-2">
+          {MORE_LINKS.map((l) => (
+            <li key={l.to}>
+              <Link to={l.to} className="flex items-center gap-3 rounded-xl px-2 py-3 hover:bg-slate-50">
+                <l.icon className="size-5 text-teal-700" aria-hidden />
+                <span className="flex-1">
+                  <span className="block font-medium">{l.label}</span>
+                  <span className="block text-sm text-slate-500">{l.hint}</span>
+                </span>
+                <ChevronRight className="size-4 text-slate-400" aria-hidden />
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </Card>
+      <SignOutCard />
+      <p className="text-center text-xs text-slate-400">Version {__APP_VERSION__}</p>
+    </div>
+  );
+}
+
+export function SignOutCard() {
   const { session, signOut } = useAuth();
   const [error, setError] = useState<string | null>(null);
-  const [isSigningOut, setIsSigningOut] = useState(false);
+  const [busy, setBusy] = useState(false);
 
   async function handleSignOut() {
     setError(null);
-    setIsSigningOut(true);
+    setBusy(true);
     try {
       await signOut();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Sign-out failed.');
-      setIsSigningOut(false);
+      setBusy(false);
     }
   }
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">More</h1>
-
-      <section className="rounded-2xl bg-white p-5 ring-1 ring-slate-200">
-        <h2 className="text-sm font-medium text-slate-500">Signed in as</h2>
-        <p className="mt-1 font-semibold break-all">{session?.user.email ?? 'Unknown account'}</p>
-        {error && (
-          <div className="mt-4">
-            <ErrorNotice title="Couldn't sign out">{error}</ErrorNotice>
-          </div>
-        )}
-        <Button variant="danger" className="mt-4" onClick={handleSignOut} disabled={isSigningOut}>
-          <LogOut className="size-4" aria-hidden />
-          {isSigningOut ? 'Signing out…' : 'Sign out'}
-        </Button>
-      </section>
-
-      <p className="text-center text-xs text-slate-400">Version {__APP_VERSION__}</p>
-    </div>
+    <Card>
+      <p className="text-sm text-slate-500">Signed in as</p>
+      <p className="mt-1 font-semibold break-all">{session?.user.email ?? 'Unknown account'}</p>
+      {error && (
+        <div className="mt-3">
+          <ErrorNotice title="Couldn't sign out">{error}</ErrorNotice>
+        </div>
+      )}
+      <Button variant="danger" className="mt-4" onClick={handleSignOut} disabled={busy}>
+        <LogOut className="size-4" aria-hidden />
+        {busy ? 'Signing out…' : 'Sign out'}
+      </Button>
+    </Card>
   );
 }

@@ -4,8 +4,7 @@
  * the rule for combining them lives here so it is unit tested.
  */
 import { assertSafePaise } from '../lib/money';
-
-export type AccountType = 'bank' | 'cash' | 'card';
+import type { AccountType } from './types';
 
 export interface AccountTotals {
   account_id: string;

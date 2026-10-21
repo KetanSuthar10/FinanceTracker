@@ -14,9 +14,11 @@ Google (sign-in)  →  Supabase (database + auth)  →  Vercel (the website)
    - Name: `finance-tracker`. Region: **Mumbai (ap-south-1)**. Plan: **Free**.
    - Save the database password in your password manager. The app doesn't need it.
 2. When the project is ready, open **SQL Editor → New query**.
-   - Paste the entire contents of `supabase/migrations/20261021000001_initial_schema.sql`, then press **Run**.
-   - Expected: "Success. No rows returned".
-   - Run each later migration file the same way, in filename order, when a new phase adds one.
+   - Paste the entire contents of each file in `supabase/migrations/`, **one at a time, in filename order**, and press **Run** after each one:
+     1. `20261021000001_initial_schema.sql`
+     2. `20261022000002_recurring_payments.sql`
+   - Expected each time: "Success. No rows returned".
+   - When a later update adds a new migration file, run just that new file the same way.
 3. Copy two values somewhere temporary. Both are public by design:
    - **Project URL**, like `https://abcdefghijklmnopqrst.supabase.co`. It's under Project Settings → Data API, or the **Connect** button.
    - **Publishable key**, starting `sb_publishable_`. It's under Project Settings → **API Keys**.

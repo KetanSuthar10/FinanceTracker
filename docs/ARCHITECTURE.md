@@ -11,7 +11,7 @@ Small, boring, standard. Prefer a well-known library over custom code.
 | Routing | React Router | Real URLs, phone back button works |
 | Data fetching | TanStack Query | Caching, refetch on focus, loading/error states for free |
 | Validation | Zod | One schema per form/write, shared by parser and form |
-| Charts | Recharts (only where a chart helps) | Category bars, monthly trend |
+| Charts | None — plain CSS bars with numbers | Category bars, budgets, 6-month trend (see DECISIONS #12) |
 | Spreadsheet import | Papa Parse (CSV), SheetJS (XLSX) | Maintained parsers, run in the browser |
 | Voice | Browser Web Speech API (`en-IN`) | No server, no cost; falls back to the phone keyboard mic |
 | Database + auth | Supabase (Postgres + Google sign-in) | Free tier is enough; row-level security |
@@ -47,7 +47,7 @@ src/
   tests/                     *.test.ts; fixture.ts = the MONEY_RULES.md fixture
     db/                      schema tests: migrations run in PGlite with a Supabase auth stand-in
 supabase/
-  migrations/                numbered SQL files, applied with the Supabase CLI
+  migrations/                numbered SQL files, applied in order (SQL Editor or Supabase CLI)
 public/
   manifest.webmanifest, icons
 ```
@@ -158,7 +158,7 @@ The real schema is in `supabase/migrations/`; the sketch above is a summary.
   - Quick text and voice produce a draft, which goes into the same form, which goes through the same schema and the same insert.
 - A single transaction is a single row insert, so it is atomic with no RPC needed.
 - **Import commit** is a Postgres function `commit_import(account_id, file_name, rows jsonb)`. It inserts the batch and all rows in one transaction. `unique(account_id, import_hash)` makes a retried import safe.
-- **Mark recurring as paid** is a Postgres function `pay_recurring(item_id, transaction jsonb)`. It inserts the transaction and advances the item atomically.
+- **Mark recurring as paid** is a Postgres function `pay_recurring(item_id, expected_due, transaction jsonb)`. It inserts the transaction and advances the item atomically. If the item has already moved past `expected_due` (double tap, another device), it refuses and writes nothing. `skip_recurring(item_id, expected_due)` only advances the date.
 - On error, the form keeps its values and shows a readable message.
 
 ## Auth and security

@@ -130,4 +130,7 @@ Rules:
 - Date words: `today` (default), `yesterday`, `day before yesterday`, weekday names (most recent past one), `on 5th`.
 - `upi`, `gpay`, `phonepe`, `paytm` are **payment methods, not accounts**. Use the default account set in Settings. If there is none, leave the account empty.
 - Account words: match account names and nicknames, case-insensitive.
-- Category: from recipient memory; otherwise empty, and the user picks one.
+- Category: from recipient memory, if the remembered category fits the type (an expense memory is never applied to income). Otherwise, if one of the words is a category name (e.g. "groceries", "rent", "fee" → *Fees & interest*, "food" → *Food & dining*), that category. Otherwise empty, and the user picks one.
+- Recipient: the words left over after removing the amount, date, type words, filler words, payment methods and account words. A new recipient keeps the user's own capitalisation ("DMart"). Transfers have no recipient; their leftover words become the note.
+- When there is more than one number, an amount marked with ₹/rs/k/lakh wins. Otherwise the first number is used and a "check the amount" warning is shown.
+- Dates: `5/10` and `05-10-2026` are day/month (Indian style). A day/month without a year that would be in the future means last year.

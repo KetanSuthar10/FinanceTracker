@@ -20,26 +20,32 @@ Status key: ⬜ not started · 🟨 in progress · ✅ done
 
 **Done when:** you can sign in with Google on the deployed URL, see an empty Home screen, and sign out. Sign-ups are then disabled.
 
-## Phase 1 — Daily tracking (first usable version) ⬜
-- [ ] Accounts: add/edit/archive, opening balance and date, default account, card due day
-- [ ] Starter categories seeded on first sign-in; add/rename/archive categories
-- [ ] Add transaction form: expense / income / transfer / refund with validation
-- [ ] Quick text box + parser (all examples in MONEY_RULES.md pass as unit tests)
-- [ ] Voice button (Web Speech, `en-IN`) filling the quick text box
-- [ ] Recipient memory: pre-fill category; Recipients screen to edit names, aliases and default category
-- [ ] Transactions list: day groups, search, filters, edit, delete
-- [ ] Home: month picker, Income/Spending/Saved, balances, money in hand, card outstanding, spending by category, top recipients
-- [ ] Reference fixture from MONEY_RULES.md passes as unit tests (both periods)
-- [ ] Checked on phone (360px) and laptop (1366px)
+## Phase 1 — Daily tracking (first usable version) 🟨 (built; waiting for live use)
+- [x] Accounts: add/edit/archive, opening balance and date, default account, card due day
+- [x] Starter categories seeded on first sign-in; add/rename/archive categories
+- [x] Add transaction form: expense / income / transfer / refund with validation
+- [x] Quick text box + parser (all examples in MONEY_RULES.md pass as unit tests)
+- [x] Voice button (Web Speech, `en-IN`) filling the quick text box
+- [x] Recipient memory: pre-fill category; Recipients screen to edit names, aliases and default category
+- [x] Transactions list: day groups, search, filters, edit, delete
+- [x] Home: month picker, Income/Spending/Saved, balances, money in hand, card outstanding, spending by category, top recipients
+- [x] Reference fixture from MONEY_RULES.md passes as unit tests (both periods)
+- [x] Checked on phone (360px) and laptop (1366px)
+- [ ] Owner: real phone check — voice in Chrome on Android, sign-in, a week of real entries
+
+How it was checked: unit tests, plus a browser run against an in-memory imitation of Supabase. That run entered the whole reference fixture through quick text and got the documented Home figures. It also covered edit, delete, validation, a failed save and retry, voice (with a simulated speech engine), aliases, filters, and no sideways scrolling at 360px and 1366px. Not yet checked: the real Supabase database, real Google sign-in, and real speech recognition on a phone.
 
 **Done when:** you have entered a real week of expenses by voice and text on your phone, and the balances match your bank app.
 
-## Phase 2 — Bills, EMIs and budgets ⬜
-- [ ] Recurring items: create/edit/pause, EMI instalment countdown
-- [ ] Upcoming screen (30 days) + Home "next 7 days"; card due dates included
-- [ ] Mark as paid → pre-filled draft → atomic save + advance (`pay_recurring`)
-- [ ] Budgets per category with progress on Home
-- [ ] Monthly trend (last 6 months income vs spending)
+## Phase 2 — Bills, EMIs and budgets 🟨 (built; waiting for live use)
+- [x] Recurring items: create/edit/pause/delete, EMI instalment countdown
+- [x] Upcoming screen (30 days, overdue shown) + Home "next 7 days"; card due dates with "Record payment" shortcut
+- [x] Mark as paid → pre-filled draft → atomic save + advance (`pay_recurring`); Skip (`skip_recurring`)
+- [x] Budgets per category with progress on Home (text labels + colour)
+- [x] Monthly trend (last 6 months income vs spending, plain bars with numbers)
+- [ ] Owner: use with real rent/EMI/card bills for a month
+
+How it was checked: database tests (pay is atomic, the same occurrence can't be paid twice, an invalid payment writes nothing, another user can't pay your reminder, skip keeps the EMI count, month-end dates clamp). Unit tests cover the 90-day horizon (₹600 = 3 × ₹200), 45-day windows, overdue items and budget thresholds. A browser run at 360px and 1366px covered creating reminders, mark as paid, skip, card bill payment, budgets and the Home cards.
 
 **Done when:** a month's rent, an EMI and a card bill have been tracked through Upcoming → Mark as paid.
 
@@ -71,5 +77,7 @@ Status key: ⬜ not started · 🟨 in progress · ✅ done
 - [ ] "Explain my month" button on Home — read-only text, no writes
 
 ## Change log
+- 2026-10-22: Phase 2 built: reminders, Upcoming, mark as paid / skip (migration 2), budgets, Home due-soon / budgets / trend.
+- 2026-10-22: Phase 1 built: accounts, categories, recipients with aliases, quick add (text + voice), transactions, Home.
 - 2026-10-21: Phase 0 code: scaffold, schema + PGlite tests, sign-in, shell. Money/date helpers and the balance formula added early, because the schema tests need them.
 - 2026-10-21: Fresh start. Scope simplified (no receipt OCR, no PDF parsing, no complex reconciliation, no owner bootstrap). Docs rewritten.

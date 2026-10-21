@@ -17,6 +17,10 @@ Short log of choices and why. Add a line when something changes.
 | 9 | 2026-10-21 | Supabase + Vercel + React/TS/Vite/Tailwind kept | Already familiar and free for this size |
 | 10 | 2026-10-21 | AI assistant moved to an optional final phase | Core tracking must not depend on it; the data-policy and cost question is unresolved |
 | 11 | 2026-10-21 | Docs reduced to 5 files + README + AGENTS | v1 had ~55 docs with conflicting status |
+| 12 | 2026-10-22 | No chart library; Home uses plain bars with the numbers written next to them | Charts here are simple; a library adds ~100 kB and hides numbers behind hover |
+| 13 | 2026-10-22 | Database tests run the real migrations in PGlite (Postgres in WebAssembly) | Tests RLS, constraints and atomic functions in CI without Docker |
+| 14 | 2026-10-22 | "Mark as paid" goes through `pay_recurring(item, expected_due, tx)` | Saves the payment and advances the reminder together; a second tap or device can't record it twice |
+| 15 | 2026-10-22 | Quick text also matches category names ("groceries" → Groceries) when there's no recipient memory | Useful from day one, before anything is remembered; documented in MONEY_RULES |
 
 ## Open — needed before the phase shown
 

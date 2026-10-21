@@ -79,3 +79,34 @@ const monthLabelFormatter = new Intl.DateTimeFormat('en-IN', {
 export function formatMonthLabel(value: string): string {
   return monthLabelFormatter.format(parseISO(value));
 }
+
+const dayLabelFormatter = new Intl.DateTimeFormat('en-IN', {
+  weekday: 'short',
+  day: 'numeric',
+  month: 'short',
+  timeZone: 'UTC',
+});
+
+/** '2026-10-21' -> 'Today' / 'Yesterday' / 'Mon, 19 Oct' */
+export function formatDayLabel(value: string, today: string = todayIST()): string {
+  if (value === today) return 'Today';
+  if (value === addDays(today, -1)) return 'Yesterday';
+  return dayLabelFormatter.format(parseISO(value));
+}
+
+const shortDateFormatter = new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+
+/** '2026-10-21' -> '21 Oct 2026' */
+export function formatShortDate(value: string): string {
+  return shortDateFormatter.format(parseISO(value));
+}
+
+/** 'YYYY-MM' for the month containing the date. */
+export function monthKey(value: string): string {
+  return value.slice(0, 7);
+}
+
+/** True for 'YYYY-MM' strings with a real month. */
+export function isValidMonthKey(value: string): boolean {
+  return /^\d{4}-(0[1-9]|1[0-2])$/.test(value);
+}

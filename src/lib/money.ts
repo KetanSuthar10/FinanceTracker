@@ -54,3 +54,12 @@ export function formatINR(paise: number, options: { alwaysShowPaise?: boolean } 
   const body = rupeeFormatter.format(rupees) + (showPaise ? `.${String(remainder).padStart(2, '0')}` : '');
   return `${paise < 0 ? '−' : ''}₹${body}`;
 }
+
+/** 12050 -> "120.50", 12000 -> "120" — for pre-filling an amount input. */
+export function paiseToInputText(paise: number): string {
+  assertSafePaise(paise);
+  const abs = Math.abs(paise);
+  const rupees = Math.trunc(abs / 100);
+  const rest = abs % 100;
+  return `${paise < 0 ? '-' : ''}${rupees}${rest ? `.${String(rest).padStart(2, '0')}` : ''}`;
+}
