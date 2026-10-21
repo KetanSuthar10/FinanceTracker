@@ -2,15 +2,16 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { findRecipient } from '../domain/recipients';
 import type { Recipient } from '../domain/types';
 import { getSupabase } from '../lib/supabase';
-import { unwrap } from './db';
+import { fetchAllPages, unwrap } from './db';
 import { keys } from './keys';
 
 export function useRecipients() {
   return useQuery({
     queryKey: keys.recipients,
     queryFn: async () => {
-      const rows = unwrap(
-        await getSupabase().from('recipients').select('id, name, aliases, default_category_id').order('name'),
+      // Paged: years of statement imports can create more than Supabase's 1,000-row default.
+      const rows = await fetchAllPages((from, to) =>
+        getSupabase().from('recipients').select('id, name, aliases, default_category_id').order('name').order('id').range(from, to),
       );
       return rows as Recipient[];
     },

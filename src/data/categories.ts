@@ -1,14 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { Category, CategoryKind } from '../domain/types';
 import { getSupabase } from '../lib/supabase';
-import { unwrap } from './db';
+import { fetchAllPages, unwrap } from './db';
 import { keys } from './keys';
 
 export function useCategories() {
   return useQuery({
     queryKey: keys.categories,
     queryFn: async () => {
-      const rows = unwrap(await getSupabase().from('categories').select('id, name, kind, archived').order('name'));
+      const rows = await fetchAllPages((from, to) =>
+        getSupabase().from('categories').select('id, name, kind, archived').order('name').order('id').range(from, to),
+      );
       return rows as Category[];
     },
   });

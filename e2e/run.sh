@@ -2,7 +2,7 @@
 # Builds the app against a fake Supabase URL, serves it, and runs every browser test at phone and laptop width.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-PORT=4108
+PORT="${PORT:-4108}"
 VITE_SUPABASE_URL=https://abcdefghijklmnopqrst.supabase.co \
 VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_TestOnlyKey1234567890 \
   npx vite build --outDir e2e/out/dist --emptyOutDir >/dev/null
