@@ -18,6 +18,7 @@ Google (sign-in)  →  Supabase (database + auth)  →  Vercel (the website)
      1. `20261021000001_initial_schema.sql`
      2. `20261022000002_recurring_payments.sql`
      3. `20261022000003_statement_import.sql`
+     4. `20261022000004_restore_backup.sql`
    - Expected each time: "Success. No rows returned".
    - When a later update adds a new migration file, run just that new file the same way.
 3. Copy two values somewhere temporary. Both are public by design:

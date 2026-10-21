@@ -159,6 +159,7 @@ The real schema is in `supabase/migrations/`; the sketch above is a summary.
 - A single transaction is a single row insert, so it is atomic with no RPC needed.
 - **Import commit** is a Postgres function `commit_import(batch_id, account_id, file_name, row_count, skipped_count, rows jsonb)`. It inserts the batch, creates any new recipients and inserts all rows in one transaction. The client chooses `batch_id`, so a retry returns the first result instead of importing twice; `unique(account_id, import_hash)` stops the same statement row being stored twice. Undo deletes the batch, and its transactions cascade.
 - **Mark recurring as paid** is a Postgres function `pay_recurring(item_id, expected_due, transaction jsonb)`. It inserts the transaction and advances the item atomically. If the item has already moved past `expected_due` (double tap, another device), it refuses and writes nothing. `skip_recurring(item_id, expected_due)` only advances the date.
+- **Restore** is `restore_backup(data jsonb)`. It only runs when the user has no accounts or transactions, keeps the backup's IDs so links survive, always uses the signed-in user's id, and is all-or-nothing. The app validates the file (shape, checksum, links) before calling it.
 - On error, the form keeps its values and shows a readable message.
 
 ## Auth and security

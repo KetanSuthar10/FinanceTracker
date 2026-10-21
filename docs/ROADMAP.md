@@ -63,10 +63,13 @@ How it was checked: unit tests for dates, amounts, headers, column guessing, fin
 
 **Done when:** a full month's statement for your main bank is imported with no duplicates against your manual entries.
 
-## Phase 4 — Export and backup ⬜
-- [ ] Export transactions CSV (for a chosen date range)
-- [ ] Full JSON backup download
-- [ ] Restore from JSON into an empty account (validated before writing; all or nothing)
+## Phase 4 — Export and backup 🟨 (built; do your first real backup)
+- [x] Export transactions CSV for a chosen date range (plain rupee numbers, spending effect column, formula-safe text)
+- [x] Full JSON backup download (version 1, integer paise, SHA-256 checksum)
+- [x] Restore from JSON into an empty app: shape, checksum and every link checked before writing; `restore_backup` is all-or-nothing (migration 4)
+- [ ] Owner: download a backup after your first week of real data
+
+How it was checked: database tests back up the full reference fixture plus reminders, budgets and recipients, and restore it into a fresh database. The balances match (net ₹6,060) and re-exporting gives identical data. Restoring over existing data is refused, and a bad row restores nothing. Edited files fail the checksum, and broken links are caught even with a recomputed checksum. A browser run at both widths covered backup, CSV, restore and a tampered file.
 
 ## Phase 5 — Polish ⬜
 - [ ] PWA install (manifest, icons, app-file caching only), offline banner
@@ -80,6 +83,7 @@ How it was checked: unit tests for dates, amounts, headers, column guessing, fin
 - [ ] "Explain my month" button on Home — read-only text, no writes
 
 ## Change log
+- 2026-10-22: Phase 4 built: CSV export, full backup with checksum, validated all-or-nothing restore (migration 4).
 - 2026-10-22: Phase 3 built: CSV/XLSX statement import with review, duplicates, atomic commit and undo (migration 3).
 - 2026-10-22: Phase 2 built: reminders, Upcoming, mark as paid / skip (migration 2), budgets, Home due-soon / budgets / trend.
 - 2026-10-22: Phase 1 built: accounts, categories, recipients with aliases, quick add (text + voice), transactions, Home.
