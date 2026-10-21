@@ -1,0 +1,86 @@
+# One-time setup (owner)
+
+About 30 minutes, done once. You never need to share passwords or secret keys with anyone, including an AI assistant. Dashboard menu names may differ slightly from what's written here; look for the closest match.
+
+You will end up with three things connected:
+
+```
+Google (sign-in)  →  Supabase (database + auth)  →  Vercel (the website)
+```
+
+## 1. Supabase project
+
+1. Go to https://supabase.com/dashboard → **New project**.
+   - Name: `finance-tracker`. Region: **Mumbai (ap-south-1)**. Plan: **Free**.
+   - Save the database password in your password manager. The app doesn't need it.
+2. When the project is ready, open **SQL Editor → New query**.
+   - Paste the entire contents of `supabase/migrations/20261021000001_initial_schema.sql`, then press **Run**.
+   - Expected: "Success. No rows returned".
+   - Run each later migration file the same way, in filename order, when a new phase adds one.
+3. Copy two values somewhere temporary. Both are public by design:
+   - **Project URL**, like `https://abcdefghijklmnopqrst.supabase.co`. It's under Project Settings → Data API, or the **Connect** button.
+   - **Publishable key**, starting `sb_publishable_`. It's under Project Settings → **API Keys**.
+   - ⚠️ Do **not** copy the *secret* key (`sb_secret_…`). The app refuses to start if it's given one.
+4. **Old project:** delete the old Supabase project (`mpjjetxtpekrxeyivlkv`) if it still exists. Project Settings → General → Delete project.
+
+## 2. Google sign-in
+
+1. Go to https://console.cloud.google.com → create a project named `finance-tracker`.
+2. **APIs & Services → OAuth consent screen**:
+   - User type: **External**. App name: `Finance Tracker`. Support and developer email: your email.
+   - No extra scopes are needed. The defaults (email, profile, openid) are enough.
+   - Under **Test users**, add your own Gmail address.
+   - Leave the app in **Testing** mode. Only listed test users can sign in, which is exactly what you want.
+3. **APIs & Services → Credentials → Create credentials → OAuth client ID**:
+   - Application type: **Web application**.
+   - **Authorised JavaScript origins:** your Vercel URL (e.g. `https://personal-finance-tracker-kohl-one.vercel.app`) and `http://localhost:5173`.
+   - **Authorised redirect URIs:** copy the **Callback URL** shown in Supabase. To find it: Supabase → Authentication → Sign In / Providers → Google. It looks like `https://<project-ref>.supabase.co/auth/v1/callback`.
+   - Create. Copy the **Client ID** and **Client secret**.
+4. Back in Supabase → **Authentication → Sign In / Providers → Google**:
+   - Enable it, paste the Client ID and Client secret, and save.
+   - The secret stays inside Supabase. It never goes into the app or Git.
+5. Supabase → **Authentication → Sign In / Providers → Email**: turn the Email provider **off**. Sign-in is Google only.
+6. Supabase → **Authentication → URL Configuration**:
+   - **Site URL:** your Vercel URL.
+   - **Redirect URLs:** add your Vercel URL and `http://localhost:5173`.
+
+## 3. Vercel
+
+1. Open your existing Vercel project, the one connected to the GitHub repo.
+2. **Settings → Environment Variables**:
+   - Delete old ones (`VITE_SUPABASE_ANON_KEY`, any `VITE_GEMINI_*`).
+   - Add the following, for **Production** and **Preview**:
+     - `VITE_SUPABASE_URL` = the Project URL
+     - `VITE_SUPABASE_PUBLISHABLE_KEY` = the publishable key
+3. **Settings → Build and Deployment:** the framework should be **Vite**. `vercel.json` in the repo sets the rest.
+4. **Deployments → Redeploy** the latest one, so it picks up the variables.
+
+## 4. First sign-in, then lock the door
+
+1. Open your Vercel URL on your phone → **Continue with Google** → choose your account.
+2. You should land on **Home** saying "You're signed in".
+   - Open **More**: it shows your email and the version number.
+3. Now stop anyone else from creating an account. Go to Supabase → **Authentication → Sign In / Providers** (or Auth settings) and turn **off "Allow new users to sign up"**.
+4. Check it worked:
+   - Open the site in a private/incognito window and try a **different** Google account.
+   - It should be refused. Either Google itself blocks it ("Access blocked", because it isn't a test user) or the app says "This Google account is not allowed to use this app".
+   - Even if someone did get in, row-level security means they would only see their own empty data, never yours.
+
+## 5. Running it on your computer (optional)
+
+```bash
+git clone https://github.com/KetanSuthar10/personal-finance-tracker.git
+cd personal-finance-tracker
+cp .env.example .env.local      # paste the same two values
+npm install
+npm run dev                     # open http://localhost:5173
+```
+
+## What to report back after setup
+
+Just tell me which of these worked; no screenshots of keys please:
+
+- [ ] Phone: sign in → Home → More shows your email → Sign out → back to sign-in
+- [ ] Laptop: the same
+- [ ] The other Google account is refused
+- [ ] No red "Couldn't reach your data" box on Home. If it appears, the SQL in step 1.2 probably didn't run.

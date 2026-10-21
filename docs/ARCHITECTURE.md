@@ -16,7 +16,7 @@ Small, boring, standard. Prefer a well-known library over custom code.
 | Voice | Browser Web Speech API (`en-IN`) | No server, no cost; falls back to the phone keyboard mic |
 | Database + auth | Supabase (Postgres + Google sign-in) | Free tier is enough; row-level security |
 | Hosting | Vercel | Static site; already in use |
-| Tests | Vitest | Money rules, parser, import matching |
+| Tests | Vitest + PGlite | Money rules, parser, import matching; the real SQL migrations run in PGlite (Postgres in WebAssembly) to test constraints and row-level security without Docker |
 
 No backend server of our own in v1. The browser talks to Supabase directly, and security comes from row-level security (RLS). There are no Edge Functions until an AI feature needs a secret key.
 
@@ -44,7 +44,8 @@ src/
     home/ transactions/ add/ upcoming/ accounts/ categories/
     recipients/ budgets/ import/ export/ settings/ auth/
   components/                Button, Input, Select, Sheet/Dialog, MoneyText, EmptyState...
-  tests/                     *.test.ts (fixture from MONEY_RULES.md lives here)
+  tests/                     *.test.ts; fixture.ts = the MONEY_RULES.md fixture
+    db/                      schema tests: migrations run in PGlite with a Supabase auth stand-in
 supabase/
   migrations/                numbered SQL files, applied with the Supabase CLI
 public/
@@ -63,7 +64,6 @@ accounts (
   opening_date date not null,
   card_due_day smallint check (card_due_day between 1 and 31),  -- cards only
   nickname text,                                     -- for quick-text matching, e.g. 'hdfc'
-  is_default boolean not null default false,         -- default account for quick add
   archived boolean not null default false
 )
 
@@ -137,7 +137,9 @@ settings (
 )
 ```
 
-**Ownership of references:** RLS stops reading other users' rows. Add a trigger or composite foreign keys so a transaction cannot point to another user's account or category. Since there is a single user, a simple trigger check is enough.
+**Ownership of references:** RLS stops reading other users' rows. Every reference between tables is a composite foreign key on `(user_id, id)`, so a row can never point at another user's account, category, recipient or batch.
+
+The real schema is in `supabase/migrations/`; the sketch above is a summary.
 
 **Deleting:** accounts and categories are archived, not deleted, once they have transactions (foreign keys without cascade enforce this).
 

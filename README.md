@@ -2,7 +2,7 @@
 
 A simple personal finance app for one person in India. Add expenses by typing or speaking, track bank, cash and credit-card balances, see where the money went each month, and never miss a bill or EMI.
 
-**Status:** fresh start — documentation only, no code yet. See [docs/ROADMAP.md](docs/ROADMAP.md).
+**Status:** Phase 0 (setup) built — sign-in, database schema and checks. Daily tracking is next. See [docs/ROADMAP.md](docs/ROADMAP.md).
 
 ## Documents
 
@@ -13,17 +13,19 @@ A simple personal finance app for one person in India. Add expenses by typing or
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Stack, folders, database tables, security |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | Phases, checklists and current status |
 | [docs/DECISIONS.md](docs/DECISIONS.md) | Why things are the way they are, and open questions |
+| [docs/SETUP.md](docs/SETUP.md) | One-time owner setup: Supabase, Google sign-in, Vercel |
 | [AGENTS.md](AGENTS.md) | Rules for AI coding assistants working on this repo |
 
 ## Stack
 
 React · TypeScript · Vite · Tailwind · TanStack Query · Supabase (Postgres + Google sign-in) · Vercel
 
-## Running locally (after Phase 0)
+## Running locally
 
 ```bash
 cp .env.example .env.local   # fill in your Supabase URL and publishable key
 npm install
 npm run dev                  # http://localhost:5173
-npm run check                # typecheck + lint + tests
+npm run check                # typecheck + lint + tests (including database tests)
+npm run build                # production build
 ```

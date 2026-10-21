@@ -4,14 +4,19 @@ This is the only status file. Tick a box only after it has been checked in the r
 
 Status key: ⬜ not started · 🟨 in progress · ✅ done
 
-## Phase 0 — Setup ⬜
-- [ ] Vite + React + TS + Tailwind + Router + TanStack Query + Zod + Vitest, versions pinned
-- [ ] ESLint + Prettier; `npm run check` runs typecheck + lint + tests
-- [ ] GitHub Actions: install, check, build on every push
-- [ ] Supabase project created (Mumbai region), Supabase CLI linked, first migration applied
-- [ ] Google OAuth configured in Google Cloud + Supabase; local and Vercel redirect URLs added
-- [ ] Vercel project connected with the two `VITE_` env vars
-- [ ] "Not configured" screen when env vars are missing
+## Phase 0 — Setup 🟨 (code done; owner setup pending)
+- [x] Vite + React + TS + Tailwind + Router + TanStack Query + Zod + Vitest, versions pinned
+- [x] ESLint; `npm run check` runs typecheck + lint + tests
+- [x] GitHub Actions workflow: install, check, build on every push (runs once pushed)
+- [x] Full schema migration with RLS, composite ownership keys, `account_totals`, starter categories
+- [x] Schema tested in PGlite: fixture balances, period opening, RLS isolation, constraints
+- [x] "Not configured" screen; secret keys refused
+- [x] Google sign-in screen, app shell (phone bottom nav / laptop sidebar), empty Home, More with sign-out
+- [x] Checked in a headless browser at 360px and 1366px with a simulated session (no live Supabase)
+- [ ] Owner: Supabase project created and migration applied ([SETUP.md](SETUP.md) §1)
+- [ ] Owner: Google OAuth configured ([SETUP.md](SETUP.md) §2)
+- [ ] Owner: Vercel env vars set and redeployed ([SETUP.md](SETUP.md) §3)
+- [ ] Owner: live sign-in on phone and laptop; sign-ups disabled; other account refused ([SETUP.md](SETUP.md) §4)
 
 **Done when:** you can sign in with Google on the deployed URL, see an empty Home screen, and sign out. Sign-ups are then disabled.
 
@@ -66,4 +71,5 @@ Status key: ⬜ not started · 🟨 in progress · ✅ done
 - [ ] "Explain my month" button on Home — read-only text, no writes
 
 ## Change log
+- 2026-10-21: Phase 0 code: scaffold, schema + PGlite tests, sign-in, shell. Money/date helpers and the balance formula added early, because the schema tests need them.
 - 2026-10-21: Fresh start. Scope simplified (no receipt OCR, no PDF parsing, no complex reconciliation, no owner bootstrap). Docs rewritten.
