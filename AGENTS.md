@@ -6,7 +6,8 @@ Read these first: `docs/PRODUCT.md`, `docs/MONEY_RULES.md`, `docs/ARCHITECTURE.m
 - Work on the current phase in `docs/ROADMAP.md`. Do not start later phases or add features that are not listed.
 - Keep it simple. Prefer a standard library over custom code, and fewer files over more abstraction. No new infrastructure without a decision in `docs/DECISIONS.md`.
 - Make small, reviewable commits. Run `npm run check` (typecheck, lint, tests) and `npm run build` before saying something works.
-- Every schema change is a new file in `supabase/migrations/` (never edit an applied one) and gets a test in `src/tests/db/`.
+- Every schema change is a new file in `supabase/migrations/` (never edit an applied one) and gets a test in `src/tests/db/`. If it changes a database function, update `e2e/mock_supabase.py` too.
+- For UI changes, run the browser tests in `e2e/` (see its README).
 - Tick a ROADMAP box only after checking the feature in the running app. Say plainly what was not checked.
 - If a requirement is unclear or conflicts with the docs, ask instead of guessing.
 

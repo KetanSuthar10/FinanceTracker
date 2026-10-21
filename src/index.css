@@ -15,3 +15,42 @@
     @apply outline-2 outline-offset-2 outline-teal-600;
   }
 }
+
+/*
+ * Dark mode. The app uses Tailwind's light palette everywhere; in dark mode the neutral scale is
+ * flipped and the pale status tints become deep ones, so every screen gets dark mode without
+ * per-component classes. Text accents get lighter shades for contrast.
+ */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-white: #111827;
+  --color-slate-50: #0b1220;
+  --color-slate-100: #1f2937;
+  --color-slate-200: #334155;
+  --color-slate-300: #475569;
+  --color-slate-400: #7c8aa0;
+  --color-slate-500: #a3aec0;
+  --color-slate-600: #cbd5e1;
+  --color-slate-700: #e2e8f0;
+  --color-slate-800: #f1f5f9;
+  --color-slate-900: #f8fafc;
+  --color-teal-50: #0b2e2b;
+  --color-teal-300: #1f5f59;
+  --color-emerald-50: #062a1f;
+  --color-emerald-900: #bbf7d0;
+  --color-red-50: #3a1214;
+  --color-red-200: #7f1d1d;
+  --color-red-800: #fca5a5;
+  --color-red-900: #fecaca;
+  --color-amber-50: #33270a;
+  --color-amber-800: #fcd34d;
+  --color-amber-900: #fde68a;
+}
+:root[data-theme='dark'] .text-teal-700 { color: #5eead4; }
+:root[data-theme='dark'] .text-teal-800 { color: #99f6e4; }
+:root[data-theme='dark'] .text-emerald-700,
+:root[data-theme='dark'] .text-emerald-800 { color: #6ee7b7; }
+:root[data-theme='dark'] .text-red-700 { color: #fca5a5; }
+:root[data-theme='dark'] .text-amber-700 { color: #fcd34d; }
+:root[data-theme='dark'] .bg-teal-700.text-white,
+:root[data-theme='dark'] .bg-teal-800.text-white { color: #ffffff; }

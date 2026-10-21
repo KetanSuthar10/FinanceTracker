@@ -76,11 +76,14 @@ export function TrendCard({ endMonthFrom }: { endMonthFrom: string }) {
   const transactions = useTransactionsBetween(start, through);
 
   const months = useMemo(() => {
-    return Array.from({ length: 6 }, (_, i) => {
+    const all = Array.from({ length: 6 }, (_, i) => {
       const range = monthRange(addMonths(start, i));
       const s = summarizePeriod(transactions.data ?? [], range.from, range.through);
       return { from: range.from, label: monthShort.format(new Date(`${range.from}T00:00:00Z`)), income: s.incomePaise, spending: s.spendingPaise };
     });
+    // Start from the first month that has anything, but always show the selected month.
+    const first = all.findIndex((m) => m.income !== 0 || m.spending !== 0);
+    return all.slice(first === -1 ? all.length - 1 : first);
   }, [transactions.data, start]);
 
   if (transactions.isLoading || transactions.error) return null;
@@ -88,13 +91,13 @@ export function TrendCard({ endMonthFrom }: { endMonthFrom: string }) {
   const pct = (v: number) => `${Math.max(0, (v / max) * 100)}%`;
 
   return (
-    <Card title="Last 6 months">
+    <Card title={months.length > 1 ? `Last ${months.length} months` : 'This month so far'}>
       <div className="mb-3 flex gap-4 text-xs text-slate-600">
         <span className="flex items-center gap-1.5">
           <span className="size-2.5 rounded-sm bg-emerald-500" aria-hidden /> Income
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="size-2.5 rounded-sm bg-teal-800" aria-hidden /> Spending
+          <span className="size-2.5 rounded-sm bg-indigo-500" aria-hidden /> Spending
         </span>
       </div>
       <ul className="space-y-2.5">
@@ -104,7 +107,7 @@ export function TrendCard({ endMonthFrom }: { endMonthFrom: string }) {
             <span className="space-y-1">
               {[
                 { label: 'In', value: m.income, color: 'bg-emerald-500' },
-                { label: 'Out', value: m.spending, color: 'bg-teal-800' },
+                { label: 'Out', value: m.spending, color: 'bg-indigo-500' },
               ].map((bar) => (
                 <span key={bar.label} className="flex items-center gap-2">
                   <span className="h-2 min-w-0 flex-1" aria-hidden>

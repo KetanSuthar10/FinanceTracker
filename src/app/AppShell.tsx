@@ -1,8 +1,9 @@
 import clsx from 'clsx';
 import { CalendarClock, Ellipsis, House, IndianRupee, List, Plus, type LucideIcon } from 'lucide-react';
-import { NavLink, Outlet } from 'react-router';
+import { NavLink, Outlet, useNavigation } from 'react-router';
 import { Button, ButtonLink } from '../components/Button';
 import { ErrorNotice } from '../components/ErrorNotice';
+import { OfflineBanner } from '../components/OfflineBanner';
 import { useStarterData } from '../data/starterData';
 import { MORE_LINKS } from '../features/more/links';
 import { SignOutCard } from '../features/more/MorePage';
@@ -30,9 +31,19 @@ const bottomLink = ({ isActive }: { isActive: boolean }) =>
 
 export function AppShell() {
   const starter = useStarterData();
+  const navigation = useNavigation();
 
   return (
     <div className="min-h-dvh lg:flex">
+      <a
+        href="#main"
+        className="sr-only z-50 rounded-lg bg-teal-700 px-4 py-2 text-white focus:not-sr-only focus:fixed focus:top-2 focus:left-2"
+      >
+        Skip to content
+      </a>
+      {navigation.state === 'loading' && (
+        <div className="fixed inset-x-0 top-0 z-50 h-1 animate-pulse bg-teal-600" role="progressbar" aria-label="Loading page" />
+      )}
       {/* Laptop: left sidebar */}
       <aside className="hidden w-64 shrink-0 border-r border-slate-200 bg-white lg:block">
         <div className="sticky top-0 flex h-dvh flex-col gap-4 overflow-y-auto p-4">
@@ -61,7 +72,8 @@ export function AppShell() {
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <main className="mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-28 lg:px-8 lg:pb-10">
+        <main id="main" tabIndex={-1} className="mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-28 outline-none lg:px-8 lg:pb-10">
+          <OfflineBanner />
           {starter.isError && (
             <div className="mb-6">
               <ErrorNotice

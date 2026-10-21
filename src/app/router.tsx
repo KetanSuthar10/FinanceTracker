@@ -1,23 +1,12 @@
 import { createBrowserRouter } from 'react-router';
-import { AccountEditPage } from '../features/accounts/AccountEditPage';
-import { AccountsPage } from '../features/accounts/AccountsPage';
-import { CategoriesPage } from '../features/categories/CategoriesPage';
 import { HomePage } from '../features/home/HomePage';
 import { MorePage } from '../features/more/MorePage';
-import { RecipientEditPage } from '../features/recipients/RecipientEditPage';
-import { RecipientsPage } from '../features/recipients/RecipientsPage';
-import { SettingsPage } from '../features/settings/SettingsPage';
 import { AddTransactionPage, EditTransactionPage } from '../features/transactions/TransactionPages';
 import { TransactionsPage } from '../features/transactions/TransactionsPage';
-import { BudgetsPage } from '../features/budgets/BudgetsPage';
-import { ImportPage } from '../features/import/ImportPage';
-import { ExportPage } from '../features/export/ExportPage';
-import { PayRecurringPage } from '../features/upcoming/PayRecurringPage';
-import { RecurringEditPage } from '../features/upcoming/RecurringEditPage';
-import { UpcomingPage } from '../features/upcoming/UpcomingPage';
 import { AuthGate } from './AuthGate';
 import { NotFoundPage } from './NotFoundPage';
 
+// Everyday screens load with the app; the rest load the first time they're opened.
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -27,21 +16,21 @@ export const router = createBrowserRouter([
       { path: 'transactions', element: <TransactionsPage /> },
       { path: 'transactions/:id', element: <EditTransactionPage /> },
       { path: 'add', element: <AddTransactionPage /> },
-      { path: 'accounts', element: <AccountsPage /> },
-      { path: 'accounts/new', element: <AccountEditPage /> },
-      { path: 'accounts/:id', element: <AccountEditPage /> },
-      { path: 'categories', element: <CategoriesPage /> },
-      { path: 'recipients', element: <RecipientsPage /> },
-      { path: 'recipients/:id', element: <RecipientEditPage /> },
-      { path: 'settings', element: <SettingsPage /> },
-      { path: 'upcoming', element: <UpcomingPage /> },
-      { path: 'recurring/new', element: <RecurringEditPage /> },
-      { path: 'recurring/:id', element: <RecurringEditPage /> },
-      { path: 'recurring/:id/pay', element: <PayRecurringPage /> },
-      { path: 'budgets', element: <BudgetsPage /> },
-      { path: 'import', element: <ImportPage /> },
-      { path: 'backup', element: <ExportPage /> },
       { path: 'more', element: <MorePage /> },
+      { path: 'accounts', lazy: () => import('../features/accounts/AccountsPage').then((m) => ({ Component: m.AccountsPage })) },
+      { path: 'accounts/new', lazy: () => import('../features/accounts/AccountEditPage').then((m) => ({ Component: m.AccountEditPage })) },
+      { path: 'accounts/:id', lazy: () => import('../features/accounts/AccountEditPage').then((m) => ({ Component: m.AccountEditPage })) },
+      { path: 'categories', lazy: () => import('../features/categories/CategoriesPage').then((m) => ({ Component: m.CategoriesPage })) },
+      { path: 'recipients', lazy: () => import('../features/recipients/RecipientsPage').then((m) => ({ Component: m.RecipientsPage })) },
+      { path: 'recipients/:id', lazy: () => import('../features/recipients/RecipientEditPage').then((m) => ({ Component: m.RecipientEditPage })) },
+      { path: 'settings', lazy: () => import('../features/settings/SettingsPage').then((m) => ({ Component: m.SettingsPage })) },
+      { path: 'upcoming', lazy: () => import('../features/upcoming/UpcomingPage').then((m) => ({ Component: m.UpcomingPage })) },
+      { path: 'recurring/new', lazy: () => import('../features/upcoming/RecurringEditPage').then((m) => ({ Component: m.RecurringEditPage })) },
+      { path: 'recurring/:id', lazy: () => import('../features/upcoming/RecurringEditPage').then((m) => ({ Component: m.RecurringEditPage })) },
+      { path: 'recurring/:id/pay', lazy: () => import('../features/upcoming/PayRecurringPage').then((m) => ({ Component: m.PayRecurringPage })) },
+      { path: 'budgets', lazy: () => import('../features/budgets/BudgetsPage').then((m) => ({ Component: m.BudgetsPage })) },
+      { path: 'import', lazy: () => import('../features/import/ImportPage').then((m) => ({ Component: m.ImportPage })) },
+      { path: 'backup', lazy: () => import('../features/export/ExportPage').then((m) => ({ Component: m.ExportPage })) },
       { path: '*', element: <NotFoundPage /> },
     ],
   },

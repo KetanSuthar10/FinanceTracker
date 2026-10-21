@@ -2,7 +2,7 @@
 
 A simple personal finance app for one person in India. Add expenses by typing or speaking, track bank, cash and credit-card balances, see where the money went each month, and never miss a bill or EMI.
 
-**Status:** Phase 0 (setup) built — sign-in, database schema and checks. Daily tracking is next. See [docs/ROADMAP.md](docs/ROADMAP.md).
+**Status:** Phases 0–5 built and tested (daily tracking, bills/EMIs/budgets, statement import, backup, installable app). Waiting for the one-time setup in [docs/SETUP.md](docs/SETUP.md) and real-world use. See [docs/ROADMAP.md](docs/ROADMAP.md).
 
 ## Documents
 
@@ -28,4 +28,5 @@ npm install
 npm run dev                  # http://localhost:5173
 npm run check                # typecheck + lint + tests (including database tests)
 npm run build                # production build
+./e2e/run.sh                 # browser tests (see e2e/README.md)
 ```

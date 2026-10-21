@@ -71,11 +71,16 @@ How it was checked: unit tests for dates, amounts, headers, column guessing, fin
 
 How it was checked: database tests back up the full reference fixture plus reminders, budgets and recipients, and restore it into a fresh database. The balances match (net ₹6,060) and re-exporting gives identical data. Restoring over existing data is refused, and a bad row restores nothing. Edited files fail the checksum, and broken links are caught even with a recomputed checksum. A browser run at both widths covered backup, CSV, restore and a tampered file.
 
-## Phase 5 — Polish ⬜
-- [ ] PWA install (manifest, icons, app-file caching only), offline banner
-- [ ] Dark mode
-- [ ] Accessibility pass: focus states, labels, dialogs, zoom
-- [ ] Code-split heavy screens (import, charts)
+## Phase 5 — Polish 🟨 (built; install it on your phone)
+- [x] PWA install: manifest with 192/512/maskable PNG icons and an Apple touch icon; a small service worker that caches only the app shell and hashed files, never another origin, so no database responses
+- [x] Offline banner; the app shell opens offline and says a connection is needed
+- [x] Dark mode (same as device / light / dark, saved on the device), no flash on load
+- [x] Accessibility: skip link, visible focus, labelled fields, text labels with every colour status, zoom allowed
+- [x] Less-used screens load on demand (import parsers, backup, reminders, budgets, settings)
+- [x] Security headers on Vercel (nosniff, no framing, referrer policy, mic only for this site)
+- [ ] Owner: "Add to Home screen" on your phone and confirm it opens like an app
+
+How it was checked: a browser run at both widths covered dark mode colours, theme persistence, the skip link, service-worker registration, the cache contents (app files only), an offline reload, manifest and icons, and lazy screens. All earlier browser suites were rerun on the final build: 93 checks × 2 widths pass.
 
 ## Phase 6 — Optional: AI assistant ⬜ (decide later)
 - [ ] Decide whether it is worth it, and confirm Gemini paid-tier data terms and cost
@@ -83,6 +88,7 @@ How it was checked: database tests back up the full reference fixture plus remin
 - [ ] "Explain my month" button on Home — read-only text, no writes
 
 ## Change log
+- 2026-10-22: Phase 5 built: PWA install + app-only caching, offline banner, dark mode, skip link, lazy screens, security headers. Browser tests added under `e2e/`.
 - 2026-10-22: Phase 4 built: CSV export, full backup with checksum, validated all-or-nothing restore (migration 4).
 - 2026-10-22: Phase 3 built: CSV/XLSX statement import with review, duplicates, atomic commit and undo (migration 3).
 - 2026-10-22: Phase 2 built: reminders, Upcoming, mark as paid / skip (migration 2), budgets, Home due-soon / budgets / trend.

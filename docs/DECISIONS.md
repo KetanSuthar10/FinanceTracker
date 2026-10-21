@@ -23,6 +23,9 @@ Short log of choices and why. Add a line when something changes.
 | 15 | 2026-10-22 | Quick text also matches category names ("groceries" → Groceries) when there's no recipient memory | Useful from day one, before anything is remembered; documented in MONEY_RULES |
 | 16 | 2026-10-22 | Spreadsheets: Papa Parse (CSV) + read-excel-file (.xlsx); old .xls not supported | The maintained SheetJS build is only on its own CDN (unreachable from the build sandbox) and the npm copy has known advisories. .xls files can be saved as .xlsx/CSV; revisit if your bank only offers .xls |
 | 17 | 2026-10-22 | Import duplicates: fingerprint per row, and "possibly entered" only suggests skipping | Two genuine ₹120 coffees on one day stay two; equal amount/date never deletes or merges anything |
+| 18 | 2026-10-22 | Hand-written 60-line service worker instead of a PWA plugin | It only caches the shell and hashed files and never another origin; easy to audit, and no build-plugin compatibility risk |
+| 19 | 2026-10-22 | Dark mode by remapping Tailwind's colour variables, not per-component `dark:` classes | Every screen gets dark mode from one CSS block; the theme choice is a device setting in localStorage (not financial data) |
+| 20 | 2026-10-22 | Browser tests (Python Playwright + in-memory Supabase imitation) kept in `e2e/`, not in CI | They check whole flows and exact figures; CI already runs unit + real-SQL database tests |
 
 ## Open — needed before the phase shown
 

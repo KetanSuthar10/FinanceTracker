@@ -14,3 +14,5 @@ supabase/.temp/
 private/
 *.statement.csv
 *.statement.xlsx
+e2e/out/
+__pycache__/

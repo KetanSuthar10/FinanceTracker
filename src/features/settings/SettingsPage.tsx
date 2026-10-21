@@ -1,9 +1,33 @@
 import { Card, PageHeader } from '../../components/Card';
 import { ErrorNotice } from '../../components/ErrorNotice';
-import { Field, SelectInput } from '../../components/form';
+import { useState } from 'react';
+import { Field, Segmented, SelectInput } from '../../components/form';
+import { getThemePreference, setThemePreference, type ThemePreference } from '../../lib/theme';
 import { QueryState } from '../../components/LoadingBlock';
 import { useSetDefaultAccount } from '../../data/settings';
 import { useLookups } from '../../hooks/useLookups';
+
+function AppearanceCard() {
+  const [pref, setPref] = useState<ThemePreference>(getThemePreference);
+  return (
+    <Card title="Appearance">
+      <Segmented
+        label="Appearance"
+        value={pref}
+        options={[
+          { value: 'system', label: 'Same as device' },
+          { value: 'light', label: 'Light' },
+          { value: 'dark', label: 'Dark' },
+        ]}
+        onChange={(value) => {
+          setPref(value);
+          setThemePreference(value);
+        }}
+      />
+      <p className="mt-2 text-sm text-slate-500">Saved on this device only.</p>
+    </Card>
+  );
+}
 
 export function SettingsPage() {
   const lookups = useLookups();
@@ -42,6 +66,8 @@ export function SettingsPage() {
               </div>
             )}
           </Card>
+
+          <AppearanceCard />
 
           <Card title="Voice input">
             <p className="text-sm text-slate-600">

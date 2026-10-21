@@ -180,7 +180,7 @@ The real schema is in `supabase/migrations/`; the sketch above is a summary.
 
 ## PWA
 
-Manifest + icons so the app can be added to the home screen. Use `vite-plugin-pwa` to cache app files only. Never cache financial data. When offline, show a banner: "You're offline — connect to save or load data."
+Manifest + PNG icons so the app can be added to the home screen. `public/sw.js` (about 60 lines, hand-written) caches only the page shell and the hashed `/assets/` files. It ignores other origins, so Supabase responses are never cached. Pages are network-first, so a new deployment shows up on the next open. When offline, a banner says: "You're offline — connect to save or load your data."
 
 ## Optional later: AI assistant
 
