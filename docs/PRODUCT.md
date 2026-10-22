@@ -110,14 +110,19 @@ Phone bottom navigation: **Home · Transactions · (+) Add · Upcoming · More**
 | Upcoming | Recurring items due in 30 days, Mark as paid, card due dates |
 | More | Accounts, Categories, Recipients, Budgets, Import, Export, Settings, Sign out |
 
-Laptop: the same screens with a left sidebar instead of bottom navigation, and the Add sheet as a centred dialog.
+Computer (1024px and wider): the same screens with a left sidebar instead of bottom navigation, using the extra width:
+- Transactions and statement review are compact tables (about 20 rows on one screen); click a row to edit.
+- Home shows its cards in two columns, three on wide screens.
+- Add has a "Latest entries" panel beside the form, so you can see what you've already entered.
+- Upcoming, Categories and Settings sit in two columns.
+- Shortcuts: **N** adds a transaction (cursor ready in quick add); **/** jumps to search.
 
 ## UI guidelines
 
-- Light theme, one accent colour, neutral greys. Dark mode can come later.
+- Light theme, one accent colour, neutral greys; dark mode follows the device or a setting.
 - Big, readable amounts in Indian format: ₹1,20,000.50.
 - Every list has an empty state that says what to do next ("No transactions yet — tap + to add one").
 - Loading and error states on every screen; a failed save keeps what you typed.
 - No technical words on screen (no "paise", "RPC", "invariant", task IDs or debug panels).
-- Works at 360px phone width and 1366px laptop width; keyboard accessible; zoom not disabled.
+- Works at 360px phone width and 1024–1920px computer widths; keyboard accessible; zoom not disabled.
 - Status is shown with text or icons as well as colour.

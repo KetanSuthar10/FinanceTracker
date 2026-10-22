@@ -2,7 +2,9 @@ import clsx from 'clsx';
 import { useId, type ComponentProps, type ReactNode } from 'react';
 
 const control =
-  'block w-full rounded-xl border bg-white px-3 py-2.5 text-base text-slate-900 placeholder:text-slate-400 disabled:bg-slate-100';
+  'block w-full rounded-xl border bg-white text-slate-900 placeholder:text-slate-400 disabled:bg-slate-100';
+/** Normal size for forms; compact for tables and filter bars on a computer. */
+const size = (compact?: boolean) => (compact ? 'rounded-lg px-2.5 py-1.5 text-sm' : 'px-3 py-2.5 text-base');
 const controlBorder = (error?: string) =>
   error ? 'border-red-400 focus:border-red-500' : 'border-slate-300 focus:border-teal-600';
 
@@ -37,16 +39,16 @@ export function Field({ label, error, hint, children, className }: FieldProps) {
   );
 }
 
-export function TextInput({ error, className, ...props }: ComponentProps<'input'> & { error?: string }) {
-  return <input aria-invalid={error ? true : undefined} className={clsx(control, controlBorder(error), className)} {...props} />;
+export function TextInput({ error, compact, className, ...props }: ComponentProps<'input'> & { error?: string; compact?: boolean }) {
+  return <input aria-invalid={error ? true : undefined} className={clsx(control, size(compact), controlBorder(error), className)} {...props} />;
 }
 
-export function SelectInput({ error, className, ...props }: ComponentProps<'select'> & { error?: string }) {
-  return <select aria-invalid={error ? true : undefined} className={clsx(control, controlBorder(error), className)} {...props} />;
+export function SelectInput({ error, compact, className, ...props }: ComponentProps<'select'> & { error?: string; compact?: boolean }) {
+  return <select aria-invalid={error ? true : undefined} className={clsx(control, size(compact), controlBorder(error), className)} {...props} />;
 }
 
 export function TextArea({ error, className, ...props }: ComponentProps<'textarea'> & { error?: string }) {
-  return <textarea aria-invalid={error ? true : undefined} className={clsx(control, controlBorder(error), className)} {...props} />;
+  return <textarea aria-invalid={error ? true : undefined} className={clsx(control, size(), controlBorder(error), className)} {...props} />;
 }
 
 /** A row of mutually exclusive buttons (e.g. Expense / Income / Transfer / Refund). */

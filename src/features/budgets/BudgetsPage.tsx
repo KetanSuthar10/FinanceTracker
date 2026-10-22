@@ -30,7 +30,7 @@ export function BudgetsPage() {
   const error = lookups.error ?? budgets.error ?? transactions.error;
 
   return (
-    <div className="mx-auto max-w-2xl space-y-5">
+    <div className="mx-auto max-w-2xl space-y-5 lg:max-w-4xl">
       <div>
         <PageHeader title="Budgets" />
         <p className="mt-1 text-sm text-slate-600">

@@ -34,11 +34,11 @@ export function SettingsPage() {
   const setDefault = useSetDefaultAccount();
 
   return (
-    <div className="mx-auto max-w-2xl space-y-5">
+    <div className="mx-auto max-w-2xl space-y-5 lg:max-w-5xl">
       <PageHeader title="Settings" />
       <QueryState isLoading={lookups.isLoading} error={lookups.error} retry={lookups.refetch} />
       {!lookups.isLoading && !lookups.error && (
-        <>
+        <div className="grid items-start gap-5 lg:grid-cols-2">
           <Card title="Quick add">
             <Field label="Default account" hint='Used when you don’t name an account, e.g. "120 cafe upi". UPI, GPay and PhonePe are payment methods, not accounts.'>
               {(id, d) => (
@@ -76,7 +76,7 @@ export function SettingsPage() {
               the text before saving, or use your phone keyboard’s own mic instead.
             </p>
           </Card>
-        </>
+        </div>
       )}
     </div>
   );

@@ -26,6 +26,7 @@ Short log of choices and why. Add a line when something changes.
 | 18 | 2026-10-22 | Hand-written 60-line service worker instead of a PWA plugin | It only caches the shell and hashed files and never another origin; easy to audit, and no build-plugin compatibility risk |
 | 19 | 2026-10-22 | Dark mode by remapping Tailwind's colour variables, not per-component `dark:` classes | Every screen gets dark mode from one CSS block; the theme choice is a device setting in localStorage (not financial data) |
 | 20 | 2026-10-22 | Browser tests (Python Playwright + in-memory Supabase imitation) kept in `e2e/`, not in CI | They check whole flows and exact figures; CI already runs unit + real-SQL database tests |
+| 21 | 2026-10-22 | On computers (≥1024px) lists become tables via `useIsDesktop`, rendering one layout or the other instead of hiding with CSS; shortcuts N and / only | One copy of each row in the page (no hidden duplicates for screen readers or tests); phone layout untouched. Shortcuts ignore typing in fields and modifier keys, so they never clash with the browser |
 
 ## Open — needed before the phase shown
 

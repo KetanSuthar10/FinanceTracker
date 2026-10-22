@@ -1,5 +1,5 @@
 import { ListX, Plus, Search } from 'lucide-react';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { EmptyState } from '../../components/EmptyState';
 import { PageHeader } from '../../components/Card';
@@ -15,16 +15,27 @@ import { useLookups } from '../../hooks/useLookups';
 import { useMonthParam } from '../../hooks/useMonthParam';
 import { formatDayLabel } from '../../lib/dates';
 import { formatINR } from '../../lib/money';
+import { useIsDesktop } from '../../hooks/useIsDesktop';
 import { TransactionRow } from './TransactionRow';
+import { TransactionsTable } from './TransactionsTable';
 import { transactionTitle } from './title';
 
 export function TransactionsPage() {
   const month = useMonthParam();
+  const isDesktop = useIsDesktop();
   const [params, setParams] = useSearchParams();
   const lookups = useLookups();
   const transactions = useTransactionsBetween(month.from, month.through);
 
-  const q = params.get('q') ?? '';
+  const urlQ = params.get('q') ?? '';
+  // Typed text lives here so fast typing never loses letters; the URL catches up after a pause.
+  const [q, setQ] = useState(urlQ);
+  const [lastUrlQ, setLastUrlQ] = useState(urlQ);
+  if (urlQ !== lastUrlQ) {
+    // The URL changed from outside (e.g. a link from Home): show that search.
+    setLastUrlQ(urlQ);
+    setQ(urlQ);
+  }
   const accountFilter = params.get('account') ?? '';
   const categoryFilter = params.get('category') ?? '';
   const typeFilter = (params.get('type') ?? '') as TransactionType | '';
@@ -40,6 +51,16 @@ export function TransactionsPage() {
       { replace: true },
     );
   }
+
+  useEffect(() => {
+    if (q === urlQ) return;
+    const timer = setTimeout(() => {
+      setLastUrlQ(q);
+      setFilter('q', q);
+    }, 300);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- setFilter is stable enough; only react to typing
+  }, [q, urlQ]);
 
   const filtered = useMemo(() => {
     const needle = normalizeName(q);
@@ -83,23 +104,26 @@ export function TransactionsPage() {
         }
       />
 
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center gap-3 lg:flex-nowrap">
         <MonthPicker label={month.label} onPrevious={month.previous} onNext={month.next} canGoNext={!month.isCurrent} />
-        <div className="relative w-full sm:w-64">
+        <div className="relative w-full sm:ml-auto sm:w-64 lg:ml-0 lg:w-auto lg:flex-1">
           <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-slate-400" aria-hidden />
           <TextInput
+            id="transaction-search"
+            autoFocus={params.get('focus') === 'search'}
             type="search"
             aria-label="Search by name or note"
-            placeholder="Search name or note"
+            placeholder={isDesktop ? 'Search name or note  ( / )' : 'Search name or note'}
             className="pl-9"
+            compact={isDesktop}
             value={q}
-            onChange={(e) => setFilter('q', e.target.value)}
+            onChange={(e) => setQ(e.target.value)}
           />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-        <SelectInput aria-label="Filter by account" value={accountFilter} onChange={(e) => setFilter('account', e.target.value)}>
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 lg:max-w-3xl">
+        <SelectInput compact={isDesktop} aria-label="Filter by account" value={accountFilter} onChange={(e) => setFilter('account', e.target.value)}>
           <option value="">All accounts</option>
           {lookups.accounts.map((a) => (
             <option key={a.id} value={a.id}>
@@ -107,7 +131,7 @@ export function TransactionsPage() {
             </option>
           ))}
         </SelectInput>
-        <SelectInput aria-label="Filter by category" value={categoryFilter} onChange={(e) => setFilter('category', e.target.value)}>
+        <SelectInput compact={isDesktop} aria-label="Filter by category" value={categoryFilter} onChange={(e) => setFilter('category', e.target.value)}>
           <option value="">All categories</option>
           <option value="none">Uncategorised</option>
           {lookups.categories.map((c) => (
@@ -117,7 +141,7 @@ export function TransactionsPage() {
             </option>
           ))}
         </SelectInput>
-        <SelectInput aria-label="Filter by type" value={typeFilter} onChange={(e) => setFilter('type', e.target.value)}>
+        <SelectInput compact={isDesktop} aria-label="Filter by type" value={typeFilter} onChange={(e) => setFilter('type', e.target.value)}>
           <option value="">All types</option>
           {(Object.keys(TRANSACTION_TYPE_LABEL) as TransactionType[]).map((t) => (
             <option key={t} value={t}>
@@ -143,7 +167,7 @@ export function TransactionsPage() {
                 'Try a different search or clear the filters.'
               ) : (
                 <>
-                  Tap{' '}
+                  {isDesktop ? 'Press N or choose' : 'Tap'}{' '}
                   <Link to="/add" className="font-semibold text-teal-700 underline">
                     Add
                   </Link>{' '}
@@ -151,6 +175,8 @@ export function TransactionsPage() {
                 </>
               )}
             </EmptyState>
+          ) : isDesktop ? (
+            <TransactionsTable transactions={filtered} lookups={lookups} />
           ) : (
             <div className="space-y-4">
               {groups.map(([day, items]) => (

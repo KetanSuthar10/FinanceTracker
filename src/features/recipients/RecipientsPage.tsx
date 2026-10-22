@@ -19,7 +19,7 @@ export function RecipientsPage() {
   }, [lookups.recipients, q]);
 
   return (
-    <div className="mx-auto max-w-2xl space-y-5">
+    <div className="mx-auto max-w-2xl space-y-5 lg:max-w-4xl">
       <div>
         <PageHeader title="Recipients" />
         <p className="mt-1 text-sm text-slate-600">Who you pay and get paid by, and the category remembered for each.</p>

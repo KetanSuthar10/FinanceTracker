@@ -12,7 +12,9 @@ trap 'kill $SERVER' EXIT
 sleep 3
 status=0
 for test in e2e/test_*.py; do
-  for size in "360 760" "1366 860"; do
+  sizes=("360 760" "1366 860")
+  [[ "$test" == *desktop* ]] && sizes=("1024 768" "1366 860" "1920 1080")
+  for size in "${sizes[@]}"; do
     echo "== $test ($size)"
     BASE="http://localhost:$PORT" python3 "$test" $size | tail -1 || status=1
   done

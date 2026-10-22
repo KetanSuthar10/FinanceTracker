@@ -23,7 +23,7 @@ export function UpcomingPage() {
   const total = totalRecurringDue(entries);
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <div className="mx-auto max-w-3xl space-y-5 lg:max-w-6xl">
       <PageHeader
         title="Upcoming"
         action={
@@ -35,7 +35,7 @@ export function UpcomingPage() {
       <QueryState isLoading={isLoading || lookups.isLoading} error={error ?? lookups.error} retry={refetch} />
 
       {!isLoading && !error && (
-        <>
+        <div className="grid items-start gap-5 lg:grid-cols-2">
           <Card title={`Next ${UPCOMING_DAYS} days`}>
             {entries.length === 0 ? (
               <p className="text-sm text-slate-500">
@@ -95,7 +95,7 @@ export function UpcomingPage() {
               </ul>
             )}
           </Card>
-        </>
+        </div>
       )}
     </div>
   );

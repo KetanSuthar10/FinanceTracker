@@ -13,11 +13,11 @@ import { formatINR } from '../../lib/money';
 import { BudgetBar } from '../budgets/BudgetBar';
 import { useUpcoming } from '../upcoming/useUpcoming';
 
-export function DueSoonCard() {
+export function DueSoonCard({ className }: { className?: string }) {
   const { entries, today, isLoading } = useUpcoming(7);
   if (isLoading) return null;
   return (
-    <Card title="Due in the next 7 days" action={<Link to="/upcoming" className="text-sm font-semibold text-teal-700">Upcoming</Link>}>
+    <Card className={className} title="Due in the next 7 days" action={<Link to="/upcoming" className="text-sm font-semibold text-teal-700">Upcoming</Link>}>
       {entries.length === 0 ? (
         <p className="text-sm text-slate-500">Nothing due this week.</p>
       ) : (
@@ -70,7 +70,7 @@ export function BudgetsCard({ spendingByCategory }: { spendingByCategory: Breakd
 const monthShort = new Intl.DateTimeFormat('en-IN', { month: 'short', timeZone: 'UTC' });
 
 /** Income vs spending for the 6 months ending with the selected one. Plain bars, with numbers in text. */
-export function TrendCard({ endMonthFrom }: { endMonthFrom: string }) {
+export function TrendCard({ endMonthFrom, className }: { endMonthFrom: string; className?: string }) {
   const start = addMonths(endMonthFrom, -5);
   const through = monthRange(endMonthFrom).through;
   const transactions = useTransactionsBetween(start, through);
@@ -91,7 +91,7 @@ export function TrendCard({ endMonthFrom }: { endMonthFrom: string }) {
   const pct = (v: number) => `${Math.max(0, (v / max) * 100)}%`;
 
   return (
-    <Card title={months.length > 1 ? `Last ${months.length} months` : 'This month so far'}>
+    <Card className={className} title={months.length > 1 ? `Last ${months.length} months` : 'This month so far'}>
       <div className="mb-3 flex gap-4 text-xs text-slate-600">
         <span className="flex items-center gap-1.5">
           <span className="size-2.5 rounded-sm bg-emerald-500" aria-hidden /> Income

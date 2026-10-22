@@ -6,7 +6,8 @@ import { ErrorNotice } from '../components/ErrorNotice';
 import { OfflineBanner } from '../components/OfflineBanner';
 import { useStarterData } from '../data/starterData';
 import { MORE_LINKS } from '../features/more/links';
-import { SignOutCard } from '../features/more/MorePage';
+import { SidebarAccount } from '../features/more/MorePage';
+import { useShortcuts } from '../hooks/useShortcuts';
 
 interface NavItem {
   to: string;
@@ -32,6 +33,7 @@ const bottomLink = ({ isActive }: { isActive: boolean }) =>
 export function AppShell() {
   const starter = useStarterData();
   const navigation = useNavigation();
+  useShortcuts();
 
   return (
     <div className="min-h-dvh lg:flex">
@@ -53,8 +55,9 @@ export function AppShell() {
             </span>
             <span className="font-semibold">Finance Tracker</span>
           </div>
-          <ButtonLink to="/add">
+          <ButtonLink to="/add" title="Add transaction (N)">
             <Plus className="size-4" aria-hidden /> Add transaction
+            <kbd className="ml-auto rounded bg-white/20 px-1.5 text-xs font-normal">N</kbd>
           </ButtonLink>
           <nav aria-label="Main" className="space-y-1">
             {[...MAIN, UPCOMING, ...MORE_LINKS].map((item) => (
@@ -65,14 +68,13 @@ export function AppShell() {
             ))}
           </nav>
           <div className="mt-auto">
-            <SignOutCard />
-            <p className="mt-2 text-center text-xs text-slate-400">Version {__APP_VERSION__}</p>
+            <SidebarAccount />
           </div>
         </div>
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <main id="main" tabIndex={-1} className="mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-28 outline-none lg:px-8 lg:pb-10">
+        <main id="main" tabIndex={-1} className="mx-auto w-full max-w-5xl flex-1 px-4 pt-6 pb-28 outline-none lg:px-8 lg:pb-10 xl:max-w-7xl">
           <OfflineBanner />
           {starter.isError && (
             <div className="mb-6">

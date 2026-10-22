@@ -78,9 +78,11 @@ How it was checked: database tests back up the full reference fixture plus remin
 - [x] Accessibility: skip link, visible focus, labelled fields, text labels with every colour status, zoom allowed
 - [x] Less-used screens load on demand (import parsers, backup, reminders, budgets, settings)
 - [x] Security headers on Vercel (nosniff, no framing, referrer policy, mic only for this site)
+- [x] Computer layout: transactions and statement review as compact tables, Home in 2–3 columns, Add with a "Latest entries" panel, two-column Upcoming / Categories / Settings, wider pages up to 1280px
+- [x] Keyboard shortcuts on a computer: **N** = add a transaction (cursor in quick add), **/** = search transactions
 - [ ] Owner: "Add to Home screen" on your phone and confirm it opens like an app
 
-How it was checked: a browser run at both widths covered dark mode colours, theme persistence, the skip link, service-worker registration, the cache contents (app files only), an offline reload, manifest and icons, and lazy screens. All earlier browser suites were rerun on the final build: 93 checks × 2 widths pass.
+How it was checked: a browser run at both widths covered dark mode colours, theme persistence, the skip link, service-worker registration, the cache contents (app files only), an offline reload, manifest and icons, and lazy screens. All earlier browser suites were rerun on the final build: 93 checks × 2 widths pass. The computer layout has its own suite (`test_6_desktop.py`, 16 checks) run at 1024, 1366 and 1920 px: shortcuts, ~20 table rows on one screen, three Home columns on wide screens, unchanged figures, the import table, and no sideways scrolling on 13 pages. Phone screenshots were compared and are unchanged.
 
 ## Phase 6 — Optional: AI assistant ⬜ (decide later)
 - [ ] Decide whether it is worth it, and confirm Gemini paid-tier data terms and cost
@@ -88,6 +90,7 @@ How it was checked: a browser run at both widths covered dark mode colours, them
 - [ ] "Explain my month" button on Home — read-only text, no writes
 
 ## Change log
+- 2026-10-22: Computer-friendly layout: tables for transactions and statement review, multi-column Home and other pages, Add side panel, N and / shortcuts. Fixed search losing keystrokes while typing fast.
 - 2026-10-22: Voice/quick add understands spoken numbers ("two hundred fifty", "one lakh twenty thousand").
 - 2026-10-22: Phase 5 built: PWA install + app-only caching, offline banner, dark mode, skip link, lazy screens, security headers. Browser tests added under `e2e/`.
 - 2026-10-22: Phase 4 built: CSV export, full backup with checksum, validated all-or-nothing restore (migration 4).

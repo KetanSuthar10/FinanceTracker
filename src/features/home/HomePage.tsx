@@ -70,12 +70,12 @@ export function HomePage() {
             </dl>
           </Card>
 
-          <div className="grid gap-5 lg:grid-cols-2">
-            <DueSoonCard />
-            <BudgetsCard spendingByCategory={summary.spendingByCategory} />
-          </div>
-
-          <div className="grid gap-5 lg:grid-cols-2">
+          {/* Phone: one column. Laptop: two. Wide screens: three side by side. */}
+          <div className="grid items-start gap-5 lg:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-5 lg:col-span-2 lg:grid-cols-2 xl:col-span-1 xl:grid-cols-1">
+              <DueSoonCard className="lg:only:col-span-2" />
+              <BudgetsCard spendingByCategory={summary.spendingByCategory} />
+            </div>
             <Card title="Balances today" action={<Link to="/accounts" className="text-sm font-semibold text-teal-700">Accounts</Link>}>
               <dl className="mb-3 grid grid-cols-2 gap-3 border-b border-slate-100 pb-3">
                 <div>
@@ -117,9 +117,8 @@ export function HomePage() {
             </Card>
           </div>
 
-          <TrendCard endMonthFrom={month.from} />
-
-          <div className="grid gap-5 lg:grid-cols-2">
+          <div className="grid items-start gap-5 lg:grid-cols-2 xl:grid-cols-3">
+            <TrendCard endMonthFrom={month.from} className="lg:col-span-2 xl:col-span-1" />
             <Card title="Top recipients">
               <BarList
                 items={summary.spendingByRecipient.slice(0, 5)}

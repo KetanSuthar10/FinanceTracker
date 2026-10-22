@@ -15,7 +15,7 @@ The mock imitates the database functions in `supabase/migrations/`. If you chang
 
 ```bash
 pip install playwright && python -m playwright install chromium
-./e2e/run.sh          # builds the app, serves it on :4108, runs every test at both widths
+./e2e/run.sh          # builds the app, serves it on :4108, runs every test at phone and laptop width, plus test_6 at 1024 / 1366 / 1920
 ```
 
 Screenshots are written to `e2e/out/` (ignored by Git). All data here is synthetic.
@@ -27,3 +27,4 @@ Screenshots are written to `e2e/out/` (ignored by Git). All data here is synthet
 | `test_3_import.py` | CSV and .xlsx statement import, mapping memory, duplicates, undo, PDF refusal |
 | `test_4_backup.py` | Backup download, CSV export, restore into an empty app, tampered backup |
 | `test_5_polish.py` | Dark mode, offline banner and offline reload, service worker caches, icons, skip link |
+| `test_6_desktop.py` | Computer layout: N and / shortcuts, transactions table, Add side panel, Home columns, import table, no sideways scrolling (computer widths only) |

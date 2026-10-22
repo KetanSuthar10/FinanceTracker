@@ -168,7 +168,7 @@ export function ImportPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <div className="mx-auto max-w-3xl space-y-5 lg:max-w-6xl">
       <div>
         <PageHeader title="Import statement" />
         <p className="mt-1 text-sm text-slate-600">CSV or Excel (.xlsx) from your bank or card. The file is read on this device and not uploaded.</p>

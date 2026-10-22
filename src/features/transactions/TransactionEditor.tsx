@@ -24,6 +24,7 @@ import {
   type TransactionSource,
   type TransactionType,
 } from '../../domain/types';
+import { useIsDesktop } from '../../hooks/useIsDesktop';
 import { useSpeechRecognition } from '../../hooks/useSpeechRecognition';
 import { todayIST } from '../../lib/dates';
 import { formatINR, paiseToInputText } from '../../lib/money';
@@ -87,6 +88,8 @@ export function TransactionEditor({ accounts, categories, recipients, defaultAcc
   const remove = useDeleteTransaction();
   const quickRef = useRef<HTMLInputElement>(null);
   const showQuickAdd = !existing && !recurring;
+  // On a computer, start typing straight away; on phones, don't pop the keyboard up uninvited.
+  const isDesktop = useIsDesktop();
 
   const activeDefault = accounts.find((a) => a.id === defaultAccountId && !a.archived)?.id ?? '';
   const [values, setValues] = useState<TransactionFormValues>(() =>
@@ -231,6 +234,7 @@ export function TransactionEditor({ accounts, categories, recipients, defaultAcc
                 value={speech.listening ? speech.interim : quickText}
                 onChange={(e) => setQuickText(e.target.value)}
                 placeholder="e.g. 120 cafe upi"
+                autoFocus={isDesktop}
                 autoComplete="off"
                 enterKeyHint="go"
                 readOnly={speech.listening}

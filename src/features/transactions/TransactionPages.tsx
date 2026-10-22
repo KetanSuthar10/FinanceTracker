@@ -3,11 +3,14 @@ import { Link, useParams, useSearchParams } from 'react-router';
 import type { TransactionFormValues } from '../../domain/transactionForm';
 import { parseRupeesToPaise } from '../../lib/money';
 import { EmptyState } from '../../components/EmptyState';
-import { PageHeader } from '../../components/Card';
+import { Card, PageHeader } from '../../components/Card';
 import { QueryState } from '../../components/LoadingBlock';
-import { useTransaction } from '../../data/transactions';
+import { useTransaction, useTransactionsBetween } from '../../data/transactions';
 import { useLookups } from '../../hooks/useLookups';
+import { useIsDesktop } from '../../hooks/useIsDesktop';
+import { monthRange, todayIST } from '../../lib/dates';
 import { TransactionEditor } from './TransactionEditor';
+import { TransactionRow } from './TransactionRow';
 
 /** Reads optional pre-fill values from the URL, e.g. /add?type=transfer&to=<card>&amount=420 (from "Pay card bill"). */
 function usePrefill(): Partial<TransactionFormValues> {
@@ -28,12 +31,13 @@ function usePrefill(): Partial<TransactionFormValues> {
 
 export function AddTransactionPage() {
   const lookups = useLookups();
+  const isDesktop = useIsDesktop();
   const prefill = usePrefill();
   const ready = !lookups.isLoading && !lookups.error;
   const hasAccounts = lookups.accounts.some((a) => !a.archived);
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
+    <div className="mx-auto max-w-2xl space-y-6 lg:max-w-6xl">
       <PageHeader title="Add transaction" />
       <QueryState isLoading={lookups.isLoading} error={lookups.error} retry={lookups.refetch} />
       {ready && !hasAccounts && (
@@ -45,15 +49,43 @@ export function AddTransactionPage() {
         </EmptyState>
       )}
       {ready && hasAccounts && (
-        <TransactionEditor
-          accounts={lookups.accounts}
-          categories={lookups.categories}
-          recipients={lookups.recipients}
-          defaultAccountId={lookups.defaultAccountId}
-          initial={prefill}
-        />
+        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
+          <TransactionEditor
+            accounts={lookups.accounts}
+            categories={lookups.categories}
+            recipients={lookups.recipients}
+            defaultAccountId={lookups.defaultAccountId}
+            initial={prefill}
+          />
+          {isDesktop && <RecentEntries lookups={lookups} />}
+        </div>
       )}
     </div>
+  );
+}
+
+/** Computer only: the latest entries next to the form, so batch entry shows what's been saved. */
+function RecentEntries({ lookups }: { lookups: ReturnType<typeof useLookups> }) {
+  const { from, through } = monthRange(todayIST());
+  const transactions = useTransactionsBetween(from, through);
+  const latest = [...(transactions.data ?? [])].sort((a, b) => b.created_at.localeCompare(a.created_at)).slice(0, 8);
+  return (
+    <Card title="Latest entries" action={<Link to="/transactions" className="text-sm font-semibold text-teal-700">All</Link>}>
+      {latest.length === 0 ? (
+        <p className="text-sm text-slate-500">Nothing added this month yet.</p>
+      ) : (
+        <ul className="-mx-2">
+          {latest.map((t) => (
+            <li key={t.id}>
+              <TransactionRow t={t} lookups={lookups} />
+            </li>
+          ))}
+        </ul>
+      )}
+      <p className="mt-3 border-t border-slate-100 pt-3 text-xs text-slate-500">
+        Tip: press <kbd className="rounded bg-slate-100 px-1">N</kbd> anywhere to add, <kbd className="rounded bg-slate-100 px-1">Enter</kbd> in quick add to fill the form.
+      </p>
+    </Card>
   );
 }
 

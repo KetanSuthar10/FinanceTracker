@@ -67,3 +67,39 @@ export function SignOutCard() {
     </Card>
   );
 }
+
+/** Compact sign-in details for the computer sidebar. */
+export function SidebarAccount() {
+  const { session, signOut } = useAuth();
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  return (
+    <div className="rounded-xl border border-slate-200 p-3">
+      <p className="truncate text-sm font-medium" title={session?.user.email ?? undefined}>
+        {session?.user.email ?? 'Signed in'}
+      </p>
+      <div className="mt-1 flex items-center justify-between gap-2">
+        <span className="text-xs text-slate-400">Version {__APP_VERSION__}</span>
+        <button
+          type="button"
+          disabled={busy}
+          onClick={async () => {
+            setBusy(true);
+            setError(null);
+            try {
+              await signOut();
+            } catch (err) {
+              setError(err instanceof Error ? err.message : 'Sign-out failed.');
+              setBusy(false);
+            }
+          }}
+          className="flex items-center gap-1 rounded-lg px-2 py-1 text-sm font-medium text-red-700 hover:bg-red-50"
+        >
+          <LogOut className="size-4" aria-hidden />
+          {busy ? 'Signing out…' : 'Sign out'}
+        </button>
+      </div>
+      {error && <p className="mt-1 text-xs text-red-700">{error}</p>}
+    </div>
+  );
+}

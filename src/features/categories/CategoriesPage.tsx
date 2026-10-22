@@ -10,14 +10,14 @@ import type { Category, CategoryKind } from '../../domain/types';
 export function CategoriesPage() {
   const categories = useCategories();
   return (
-    <div className="mx-auto max-w-2xl space-y-5">
+    <div className="mx-auto max-w-2xl space-y-5 lg:max-w-5xl">
       <PageHeader title="Categories" />
       <QueryState isLoading={categories.isLoading} error={categories.error} retry={() => void categories.refetch()} />
       {categories.data && (
-        <>
+        <div className="grid items-start gap-5 lg:grid-cols-2">
           <CategoryGroup title="Spending" kind="expense" all={categories.data} />
           <CategoryGroup title="Income" kind="income" all={categories.data} />
-        </>
+        </div>
       )}
     </div>
   );
