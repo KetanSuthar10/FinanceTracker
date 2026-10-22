@@ -88,6 +88,7 @@ How it was checked: a browser run at both widths covered dark mode colours, them
 - [ ] "Explain my month" button on Home — read-only text, no writes
 
 ## Change log
+- 2026-10-22: Voice/quick add understands spoken numbers ("two hundred fifty", "one lakh twenty thousand").
 - 2026-10-22: Phase 5 built: PWA install + app-only caching, offline banner, dark mode, skip link, lazy screens, security headers. Browser tests added under `e2e/`.
 - 2026-10-22: Phase 4 built: CSV export, full backup with checksum, validated all-or-nothing restore (migration 4).
 - 2026-10-22: Phase 3 built: CSV/XLSX statement import with review, duplicates, atomic commit and undo (migration 3).

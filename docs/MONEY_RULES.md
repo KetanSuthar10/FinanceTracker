@@ -126,7 +126,7 @@ The parser only makes a **draft**. It never guesses silently. Anything it is uns
 | `coffee` (no amount) | amount empty → the form asks for it. **Never invent an amount.** |
 
 Rules:
-- Amount: digits with optional `₹`, `rs`, `rupees`, Indian or Western commas, decimals, `k` = thousand, `lakh`/`l` = 1,00,000. Spoken numbers like "two hundred" are a nice-to-have, since speech-to-text usually returns digits.
+- Amount: digits with optional `₹`, `rs`, `rupees`, Indian or Western commas, decimals, `k` = thousand, `lakh`/`l` = 1,00,000. Spoken numbers are understood too: "two hundred fifty", "one thousand five hundred and fifty", "one lakh twenty thousand", "a hundred". A lone small word ("one coffee") is only an amount when followed by "rupees".
 - Date words: `today` (default), `yesterday`, `day before yesterday`, weekday names (most recent past one), `on 5th`.
 - `upi`, `gpay`, `phonepe`, `paytm` are **payment methods, not accounts**. Use the default account set in Settings. If there is none, leave the account empty.
 - Account words: match account names and nicknames, case-insensitive.

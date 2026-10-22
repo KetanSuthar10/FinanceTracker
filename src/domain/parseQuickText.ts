@@ -5,6 +5,7 @@
  * Examples and rules: docs/MONEY_RULES.md → "Quick text / voice parsing".
  */
 import { addDays, addMonths, isValidISODate } from '../lib/dates';
+import { numberWordsToDigits } from './numberWords';
 import { findRecipient, normalizeName, toDisplayName } from './recipients';
 import {
   categoryKindFor,
@@ -270,7 +271,7 @@ function categoryFromWords(words: string[], categories: ParseContext['categories
 // ---------------------------------------------------------------------------
 export function parseQuickText(input: string, ctx: ParseContext): QuickDraft {
   const warnings: string[] = [];
-  let text = ` ${input.toLowerCase().replace(/\s+/g, ' ').trim()} `;
+  let text = ` ${numberWordsToDigits(input.toLowerCase().replace(/\s+/g, ' ').trim())} `;
 
   const dateResult = extractDate(text, ctx.today, (rest) => /\d/.test(rest));
   text = dateResult.text;
