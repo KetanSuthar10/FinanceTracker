@@ -3,6 +3,7 @@ import { IndianRupee } from 'lucide-react';
 import { Button } from '../../components/Button';
 import { ErrorNotice } from '../../components/ErrorNotice';
 import { Field, TextInput } from '../../components/form';
+import { ThemeToggle } from '../../components/ThemeToggle';
 import { supabaseConfig } from '../../lib/supabase';
 import { useAuth } from './authContext';
 import { readSignInMethods, type SignInMethods } from './messages';
@@ -73,17 +74,20 @@ export function SignInPage() {
   }
 
   return (
-    <main className="flex min-h-dvh items-center justify-center px-4 py-8">
+    <main className="relative flex min-h-dvh items-center justify-center px-4 py-8">
+      <ThemeToggle className="absolute top-4 right-4" />
       <div className="w-full max-w-sm">
-        <div className="mb-8 flex flex-col items-center text-center">
-          <div className="mb-4 flex size-14 items-center justify-center rounded-2xl bg-teal-700 text-white">
-            <IndianRupee className="size-7" aria-hidden />
+        <div className="mb-8">
+          <div className="brut-control glow mb-6 flex size-16 items-center justify-center rounded-md bg-neon text-on-neon">
+            <IndianRupee className="size-8" aria-hidden strokeWidth={2.5} />
           </div>
-          <h1 className="text-2xl font-bold">Finance Tracker</h1>
-          <p className="mt-1 text-sm text-slate-600">Your money, simply tracked.</p>
+          <h1 className="text-6xl leading-[0.9] font-semibold tracking-tight">
+            <span className="block">Finance</span> <span className="block">Tracker</span>
+          </h1>
+          <p className="mt-3 text-sm text-slate-600">Every rupee in, every rupee out.</p>
         </div>
 
-        <div className="space-y-4 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+        <div className="brut space-y-4 rounded-md bg-white p-6">
           {error && <ErrorNotice title="Sign-in didn't work">{error}</ErrorNotice>}
 
           {methods.email && (
@@ -114,7 +118,7 @@ export function SignInPage() {
             <>
               {methods.email && (
                 <div className="flex items-center gap-3 text-xs text-slate-500" aria-hidden>
-                  <span className="h-px flex-1 bg-slate-200" /> or <span className="h-px flex-1 bg-slate-200" />
+                  <span className="h-0.5 flex-1 bg-slate-200" /> or <span className="h-0.5 flex-1 bg-slate-200" />
                 </div>
               )}
               <Button variant={methods.email ? 'secondary' : 'primary'} className="w-full" onClick={handleGoogle} disabled={busy !== null}>

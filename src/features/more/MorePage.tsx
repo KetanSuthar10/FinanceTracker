@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import { Button } from '../../components/Button';
 import { Card, PageHeader } from '../../components/Card';
 import { ErrorNotice } from '../../components/ErrorNotice';
+import { ThemeToggle } from '../../components/ThemeToggle';
 import { useAuth } from '../auth/authContext';
 import { MORE_LINKS } from './links';
 
@@ -12,12 +13,12 @@ import { MORE_LINKS } from './links';
 export function MorePage() {
   return (
     <div className="mx-auto max-w-2xl space-y-5">
-      <PageHeader title="More" />
+      <PageHeader title="More" action={<ThemeToggle />} />
       <Card>
         <ul className="-mx-2">
           {MORE_LINKS.map((l) => (
             <li key={l.to}>
-              <Link to={l.to} className="flex items-center gap-3 rounded-xl px-2 py-3 hover:bg-slate-50">
+              <Link to={l.to} className="flex items-center gap-3 rounded-md px-2 py-3 hover:bg-slate-50">
                 <l.icon className="size-5 text-teal-700" aria-hidden />
                 <span className="flex-1">
                   <span className="block font-medium">{l.label}</span>
@@ -74,12 +75,12 @@ export function SidebarAccount() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   return (
-    <div className="rounded-xl border border-slate-200 p-3">
+    <div className="rounded-md border-2 border-slate-200 p-3">
       <p className="truncate text-sm font-medium" title={session?.user.email ?? undefined}>
         {session?.user.email ?? 'Signed in'}
       </p>
       <div className="mt-1 flex items-center justify-between gap-2">
-        <span className="text-xs text-slate-400">Version {__APP_VERSION__}</span>
+        <span className="text-xs whitespace-nowrap text-slate-400">v{__APP_VERSION__}</span>
         <button
           type="button"
           disabled={busy}
@@ -93,7 +94,7 @@ export function SidebarAccount() {
               setBusy(false);
             }
           }}
-          className="flex items-center gap-1 rounded-lg px-2 py-1 text-sm font-medium text-red-700 hover:bg-red-50"
+          className="flex items-center gap-1 rounded-md px-2 py-1 text-sm font-semibold whitespace-nowrap text-red-700 hover:bg-red-50"
         >
           <LogOut className="size-4" aria-hidden />
           {busy ? 'Signing out…' : 'Sign out'}

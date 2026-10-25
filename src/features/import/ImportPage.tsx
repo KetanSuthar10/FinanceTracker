@@ -200,8 +200,8 @@ export function ImportPage() {
                 <div>
                   <label
                     htmlFor="statement-file"
-                    className={`flex min-h-24 cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed p-4 text-center ${
-                      account ? 'border-teal-300 bg-teal-50/50 text-teal-800 hover:bg-teal-50' : 'cursor-not-allowed border-slate-200 text-slate-400'
+                    className={`flex min-h-24 cursor-pointer flex-col items-center justify-center gap-1 rounded-md border-2 border-dashed p-4 text-center ${
+                      account ? 'border-slate-900 bg-teal-50 text-slate-900 hover:bg-neon' : 'cursor-not-allowed border-slate-200 text-slate-400'
                     }`}
                   >
                     <FileUp className="size-6" aria-hidden />

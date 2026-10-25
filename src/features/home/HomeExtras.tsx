@@ -94,10 +94,10 @@ export function TrendCard({ endMonthFrom, className }: { endMonthFrom: string; c
     <Card className={className} title={months.length > 1 ? `Last ${months.length} months` : 'This month so far'}>
       <div className="mb-3 flex gap-4 text-xs text-slate-600">
         <span className="flex items-center gap-1.5">
-          <span className="size-2.5 rounded-sm bg-emerald-500" aria-hidden /> Income
+          <span className="size-2.5 bg-emerald-500" aria-hidden /> Income
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="size-2.5 rounded-sm bg-indigo-500" aria-hidden /> Spending
+          <span className="size-2.5 bg-slate-900" aria-hidden /> Spending
         </span>
       </div>
       <ul className="space-y-2.5">
@@ -107,11 +107,11 @@ export function TrendCard({ endMonthFrom, className }: { endMonthFrom: string; c
             <span className="space-y-1">
               {[
                 { label: 'In', value: m.income, color: 'bg-emerald-500' },
-                { label: 'Out', value: m.spending, color: 'bg-indigo-500' },
+                { label: 'Out', value: m.spending, color: 'bg-slate-900' },
               ].map((bar) => (
                 <span key={bar.label} className="flex items-center gap-2">
-                  <span className="h-2 min-w-0 flex-1" aria-hidden>
-                    <span className={`block h-2 rounded-full ${bar.color}`} style={{ width: pct(bar.value) }} />
+                  <span className="h-2.5 min-w-0 flex-1" aria-hidden>
+                    <span className={`block h-2.5 ${bar.color}`} style={{ width: pct(bar.value) }} />
                   </span>
                   <span className="w-28 shrink-0 text-right text-xs whitespace-nowrap text-slate-600 tabular-nums">
                     {bar.label} {formatINR(bar.value)}

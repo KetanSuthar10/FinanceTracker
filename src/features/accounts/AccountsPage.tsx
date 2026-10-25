@@ -22,8 +22,8 @@ export function AccountsPage() {
     const isDefault = settings.data?.default_account_id === a.id;
     return (
       <li key={a.id}>
-        <Link to={`/accounts/${a.id}`} className="flex items-center gap-3 rounded-xl px-2 py-3 hover:bg-slate-50">
-          <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-teal-50 text-teal-700">
+        <Link to={`/accounts/${a.id}`} className="flex items-center gap-3 rounded-md px-2 py-3 hover:bg-slate-50">
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-md border-2 border-slate-900 bg-neon text-on-neon">
             <Icon className="size-4" aria-hidden />
           </span>
           <span className="min-w-0 flex-1">
@@ -38,7 +38,7 @@ export function AccountsPage() {
                 .join(' · ')}
             </span>
           </span>
-          <BalanceText type={a.type} balancePaise={positions?.balances.get(a.id) ?? 0} className="text-sm font-semibold" />
+          <BalanceText type={a.type} balancePaise={positions?.balances.get(a.id) ?? 0} className="max-w-[45%] text-right text-sm font-semibold" />
           <ChevronRight className="size-4 shrink-0 text-slate-400" aria-hidden />
         </Link>
       </li>

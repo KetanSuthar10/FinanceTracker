@@ -23,16 +23,16 @@ export function TransactionRow({ t, lookups }: { t: Transaction; lookups: RowLoo
   return (
     <Link
       to={`/transactions/${t.id}`}
-      className="flex items-center gap-3 rounded-xl px-2 py-2.5 hover:bg-slate-50 focus-visible:bg-slate-50"
+      className="flex items-center gap-3 rounded-md px-2 py-2.5 hover:bg-slate-50 focus-visible:bg-slate-50"
     >
       <span
         className={
-          'flex size-9 shrink-0 items-center justify-center rounded-full ' +
+          'flex size-9 shrink-0 items-center justify-center rounded-md border-2 ' +
           (t.type === 'income' || t.type === 'refund'
-            ? 'bg-emerald-50 text-emerald-700'
+            ? 'border-emerald-700 bg-emerald-50 text-emerald-700'
             : t.type === 'transfer'
-              ? 'bg-slate-100 text-slate-500'
-              : 'bg-teal-50 text-teal-700')
+              ? 'border-slate-300 bg-slate-100 text-slate-500'
+              : 'border-slate-900 bg-white text-slate-900')
         }
       >
         <Icon className="size-4" aria-hidden />

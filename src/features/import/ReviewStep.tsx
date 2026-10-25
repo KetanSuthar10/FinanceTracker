@@ -112,8 +112,8 @@ export function ReviewStep(props: Props) {
               setShown(PAGE);
             }}
             className={clsx(
-              'rounded-full px-3 py-1.5 text-sm font-medium ring-1',
-              filter === f.key ? 'bg-teal-700 text-white ring-teal-700' : 'bg-white text-slate-700 ring-slate-300',
+              'rounded-md border-2 px-3 py-1.5 text-sm font-semibold',
+              filter === f.key ? 'border-edge bg-neon text-on-neon' : 'border-slate-300 bg-white text-slate-700',
             )}
           >
             {f.label}
@@ -136,7 +136,7 @@ export function ReviewStep(props: Props) {
           {visible.slice(0, shown).map(({ row, index }) => (
             <ReviewRowCard key={row.hash + index} row={row} index={index} problem={problemLines.get(row.line)} {...props} />
           ))}
-          {visible.length === 0 && <li className="rounded-xl bg-white p-4 text-sm text-slate-500 ring-1 ring-slate-200">Nothing here.</li>}
+          {visible.length === 0 && <li className="rounded-md bg-white p-4 text-sm text-slate-500 ring-1 ring-slate-200">Nothing here.</li>}
         </ul>
       )}
       {visible.length > shown && (
@@ -145,7 +145,7 @@ export function ReviewStep(props: Props) {
         </Button>
       )}
 
-      <div className="fixed inset-x-0 bottom-[calc(4.5rem+env(safe-area-inset-bottom))] z-10 border-t border-slate-200 bg-white/95 p-3 backdrop-blur lg:sticky lg:bottom-4 lg:rounded-2xl lg:border lg:p-4 lg:shadow-sm">
+      <div className="fixed inset-x-0 bottom-[calc(4.5rem+env(safe-area-inset-bottom))] z-10 border-t border-slate-200 bg-white/95 p-3 backdrop-blur lg:sticky lg:bottom-4 lg:rounded-md lg:border lg:p-4 lg:shadow-sm">
         <div className="mx-auto flex max-w-3xl flex-col gap-2">
           {problems.length > 0 && (
             <p className="text-sm text-red-700">
@@ -188,7 +188,7 @@ function ReviewRowCard({
   return (
     <li
       className={clsx(
-        'rounded-xl bg-white p-3 ring-1',
+        'rounded-md bg-white p-3 ring-1',
         problem ? 'ring-red-300' : row.include ? 'ring-slate-200' : 'ring-slate-200 opacity-70',
       )}
     >
@@ -306,12 +306,12 @@ function ReviewTable({
   onChange,
 }: Props & { items: { row: ReviewRow; index: number }[]; problemLines: Map<number, string> }) {
   if (items.length === 0) {
-    return <p className="rounded-xl bg-white p-4 text-sm text-slate-500 ring-1 ring-slate-200">Nothing here.</p>;
+    return <p className="rounded-md bg-white p-4 text-sm text-slate-500 ring-1 ring-slate-200">Nothing here.</p>;
   }
   return (
-    <div className="overflow-hidden rounded-2xl bg-white ring-1 ring-slate-200">
+    <div className="brut overflow-hidden rounded-md bg-white">
       <table className="w-full table-fixed text-sm">
-        <thead className="border-b border-slate-200 bg-slate-50 text-left text-xs font-semibold tracking-wide text-slate-500 uppercase">
+        <thead className="border-b-2 border-[var(--edge-soft)] bg-slate-100 text-left font-display text-sm font-medium text-slate-700">
           <tr>
             <th scope="col" className="w-10 px-3 py-2.5">
               <span className="sr-only">Import</span>

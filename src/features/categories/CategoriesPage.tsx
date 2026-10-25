@@ -75,14 +75,14 @@ function CategoryGroup({ title, kind, all }: { title: string; kind: CategoryKind
                 </Button>
               </form>
             ) : (
-              <div className="flex items-center gap-2">
-                <span className="min-w-0 flex-1 break-words">{c.name}</span>
-                <Button variant="ghost" className="min-h-9 px-3" onClick={() => setEditing({ id: c.id, name: c.name })}>
+              <div className="flex items-center gap-1">
+                <span className="min-w-0 flex-1 break-words hyphens-auto">{c.name}</span>
+                <Button variant="ghost" className="min-h-9 px-2" onClick={() => setEditing({ id: c.id, name: c.name })}>
                   Rename
                 </Button>
                 <Button
                   variant="ghost"
-                  className="min-h-9 px-3 text-slate-500"
+                  className="min-h-9 px-2 text-slate-500"
                   onClick={() => archive.mutate({ id: c.id, archived: true })}
                   aria-label={`Archive ${c.name}`}
                 >

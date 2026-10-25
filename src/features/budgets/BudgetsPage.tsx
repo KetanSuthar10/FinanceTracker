@@ -92,12 +92,12 @@ function BudgetRow({
 
   return (
     <li className="py-3">
-      <form onSubmit={onSubmit} className="flex items-center gap-2">
-        <span className="min-w-0 flex-1">
+      <form onSubmit={onSubmit} className="flex flex-wrap items-center gap-2">
+        <span className="min-w-0 basis-full sm:flex-1 sm:basis-auto">
           <span className="block truncate font-medium">{category.name}</span>
           <span className="block truncate text-sm text-slate-500">Spent {formatINR(spentPaise)}</span>
         </span>
-        <div className="w-24 shrink-0 sm:w-32">
+        <div className="min-w-0 flex-1 sm:w-36 sm:flex-none">
           <TextInput
             aria-label={`Monthly limit for ${category.name}`}
             inputMode="decimal"

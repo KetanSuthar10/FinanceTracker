@@ -90,6 +90,7 @@ How it was checked: a browser run at both widths covered dark mode colours, them
 - [ ] "Explain my month" button on Home — read-only text, no writes
 
 ## Change log
+- 2026-10-25: Redesign — brutalist cards, neumorphic inputs, Oswald + JetBrains Mono, neon lime accent; new light/dark palettes and app icon; quick light/dark switch.
 - 2026-10-25: Email + password sign-in (Google optional, shown only when switched on); Netlify deploy files; a plain "database isn't set up yet" message instead of a raw error.
 - 2026-10-22: Computer-friendly layout: tables for transactions and statement review, multi-column Home and other pages, Add side panel, N and / shortcuts. Fixed search losing keystrokes while typing fast.
 - 2026-10-22: Voice/quick add understands spoken numbers ("two hundred fifty", "one lakh twenty thousand").

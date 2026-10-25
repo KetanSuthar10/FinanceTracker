@@ -182,7 +182,7 @@ function RestoreCard({ isEmpty }: { isEmpty: boolean }) {
       ) : (
         <>
           <p className="text-sm text-slate-600">Pick a backup file. It’s checked completely before anything is written.</p>
-          <label className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold ring-1 ring-slate-300 hover:bg-slate-50">
+          <label className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-md px-4 py-2.5 text-sm font-semibold ring-1 ring-slate-300 hover:bg-slate-50">
             <Upload className="size-4" aria-hidden /> Choose backup file
             <input type="file" accept=".json,application/json" className="sr-only" onChange={onFile} />
           </label>
@@ -198,7 +198,7 @@ function RestoreCard({ isEmpty }: { isEmpty: boolean }) {
             </div>
           )}
           {checked && (
-            <div className="mt-4 rounded-xl bg-slate-50 p-4 text-sm">
+            <div className="mt-4 rounded-md bg-slate-50 p-4 text-sm">
               <p className="flex items-center gap-2 font-semibold text-emerald-800">
                 <ShieldCheck className="size-5" aria-hidden /> Backup checked — everything is consistent
               </p>

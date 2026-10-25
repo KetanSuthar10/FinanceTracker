@@ -25,7 +25,7 @@ export function BudgetBar({ progress }: { progress: BudgetProgress }) {
         <span className="text-slate-600 tabular-nums">{text}</span>
       </div>
       <div
-        className="mt-1 h-2 rounded-full bg-slate-100"
+        className="mt-1.5 h-2.5 bg-slate-100 ring-1 ring-slate-300"
         role="progressbar"
         aria-valuemin={0}
         aria-valuemax={100}
@@ -33,7 +33,7 @@ export function BudgetBar({ progress }: { progress: BudgetProgress }) {
         aria-label={`${percent}% of budget used`}
       >
         <div
-          className={clsx('h-2 rounded-full', status === 'over' ? 'bg-red-600' : status === 'near' ? 'bg-amber-500' : 'bg-emerald-600')}
+          className={clsx('h-2.5', status === 'over' ? 'bg-red-600' : status === 'near' ? 'bg-amber-500' : 'bg-emerald-600')}
           style={{ width: `${Math.min(percent, 100)}%` }}
         />
       </div>

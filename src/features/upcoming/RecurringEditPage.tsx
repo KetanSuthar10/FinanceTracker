@@ -192,7 +192,7 @@ function RecurringForm({ existing, lookups }: { existing?: RecurringItem; lookup
           </Field>
         </div>
         {values.type === 'expense' && (
-          <p className="rounded-xl bg-slate-50 p-3 text-sm text-slate-600">
+          <p className="rounded-md bg-slate-50 p-3 text-sm text-slate-600">
             Credit-card EMI? The purchase was already counted when you bought it. Make this reminder “Paid from” the card only if
             you want to track it — your card bill payment covers it. Loan EMIs from a bank account are counted as spending when
             marked as paid.

@@ -17,9 +17,9 @@ const SOURCE_LABEL: Record<Transaction['source'], string | null> = {
 export function TransactionsTable({ transactions, lookups }: { transactions: Transaction[]; lookups: RowLookups }) {
   const navigate = useNavigate();
   return (
-    <div className="overflow-hidden rounded-2xl bg-white ring-1 ring-slate-200">
+    <div className="brut overflow-hidden rounded-md bg-white">
       <table className="w-full table-fixed text-sm">
-        <thead className="border-b border-slate-200 bg-slate-50 text-left text-xs font-semibold tracking-wide text-slate-500 uppercase">
+        <thead className="border-b-2 border-[var(--edge-soft)] bg-slate-100 text-left font-display text-sm font-medium text-slate-700">
           <tr>
             <th scope="col" className="w-28 px-4 py-2.5">
               Date
@@ -62,7 +62,7 @@ export function TransactionsTable({ transactions, lookups }: { transactions: Tra
                   >
                     {title}
                   </Link>
-                  {tag && <span className="ml-2 rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600">{tag}</span>}
+                  {tag && <span className="ml-2 rounded-sm border border-slate-300 bg-slate-100 px-1.5 py-0.5 text-xs text-slate-600">{tag}</span>}
                   {t.note && t.note !== title && <span className="ml-2 text-slate-500">{t.note}</span>}
                 </td>
                 <td className={clsx('truncate px-4 py-2.5', !category && !isTransfer ? 'text-amber-700' : 'text-slate-700')}>

@@ -1,6 +1,6 @@
 import { Card, PageHeader } from '../../components/Card';
 import { ErrorNotice } from '../../components/ErrorNotice';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Field, Segmented, SelectInput } from '../../components/form';
 import { getThemePreference, setThemePreference, type ThemePreference } from '../../lib/theme';
 import { QueryState } from '../../components/LoadingBlock';
@@ -9,6 +9,12 @@ import { useLookups } from '../../hooks/useLookups';
 
 function AppearanceCard() {
   const [pref, setPref] = useState<ThemePreference>(getThemePreference);
+  // Stay in step with the quick light/dark switch in the sidebar.
+  useEffect(() => {
+    const sync = () => setPref(getThemePreference());
+    window.addEventListener('themechange', sync);
+    return () => window.removeEventListener('themechange', sync);
+  }, []);
   return (
     <Card title="Appearance">
       <Segmented

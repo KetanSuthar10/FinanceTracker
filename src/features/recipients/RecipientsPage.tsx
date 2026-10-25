@@ -40,7 +40,7 @@ export function RecipientsPage() {
             <ul className="-mx-2">
               {list.map((r) => (
                 <li key={r.id}>
-                  <Link to={`/recipients/${r.id}`} className="flex items-center gap-3 rounded-xl px-2 py-2.5 hover:bg-slate-50">
+                  <Link to={`/recipients/${r.id}`} className="flex items-center gap-3 rounded-md px-2 py-2.5 hover:bg-slate-50">
                     <span className="min-w-0 flex-1">
                       <span className="block truncate font-medium">{r.name}</span>
                       <span className="block truncate text-sm text-slate-500">

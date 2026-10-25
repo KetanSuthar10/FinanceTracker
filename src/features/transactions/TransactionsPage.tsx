@@ -180,8 +180,8 @@ export function TransactionsPage() {
           ) : (
             <div className="space-y-4">
               {groups.map(([day, items]) => (
-                <section key={day} className="rounded-2xl bg-white p-2 ring-1 ring-slate-200">
-                  <h2 className="px-2 pt-1 pb-1 text-xs font-semibold tracking-wide text-slate-500 uppercase">
+                <section key={day} className="brut rounded-md bg-white p-2">
+                  <h2 className="px-2 pt-1 pb-1 text-base font-medium text-slate-600">
                     {formatDayLabel(day)}
                   </h2>
                   <ul>

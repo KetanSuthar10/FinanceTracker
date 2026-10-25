@@ -1,56 +1,201 @@
 @import 'tailwindcss';
+@import '@fontsource-variable/oswald';
+@import '@fontsource-variable/jetbrains-mono';
+
+/*
+ * Design: "concrete + neon".
+ *   Brutalism  → structure: cards and panels have ink edges and hard offset shadows.
+ *   Neumorphism→ controls you type into or toggle sit pressed into the surface (inset wells).
+ *   Power      → Oswald for headings and buttons; pure black in dark mode.
+ *   Mono       → JetBrains Mono for all text and every number (tabular figures line up).
+ *   Neon       → lime is the one accent: primary actions, the active page, the month summary.
+ *
+ * Tailwind's palette names are used as roles, and remapped here for both themes:
+ *   white = card surface, slate-50 = page, slate-100 = wells/hover, slate-200..900 = lines → text,
+ *   teal = accent (links and icons; fills use bg-neon), emerald = money in, red = danger, amber = warning.
+ */
 
 @theme {
-  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  --font-display: 'Oswald Variable', 'Arial Narrow', Impact, sans-serif;
+  --color-neon: #bbf351;
+  --color-on-neon: #000000;
+  --color-edge: #000000;
+  --color-bar: #000000;
+}
+
+/* ---------- Light: concrete, paper and ink ---------- */
+:root {
+  color-scheme: light;
+  --color-white: #f7f7f4;
+  --color-slate-50: #e3e3de;
+  --color-slate-100: #e9e9e4;
+  --color-slate-200: #c9c9c2;
+  --color-slate-300: #a3a39b;
+  --color-slate-400: #61615a;
+  --color-slate-500: #55554f;
+  --color-slate-600: #3b3b37;
+  --color-slate-700: #262624;
+  --color-slate-800: #141413;
+  --color-slate-900: #000000;
+  --color-teal-50: #ecfacd;
+  --color-teal-300: #8fc23a;
+  --color-teal-600: #0088c7;
+  --color-teal-700: #005f8c;
+  --color-teal-800: #004566;
+  --color-emerald-50: #dcf5e4;
+  --color-emerald-500: #16a34a;
+  --color-emerald-600: #128a3f;
+  --color-emerald-700: #0d7034;
+  --color-emerald-800: #0a5a2a;
+  --color-red-50: #ffe3ea;
+  --color-red-200: #f4a3b6;
+  --color-red-600: #e0164a;
+  --color-red-700: #c3103f;
+  --color-red-800: #9a0c31;
+  --color-red-900: #6e0823;
+  --color-amber-50: #fff1d6;
+  --color-amber-500: #f08c00;
+  --color-amber-700: #a85a00;
+  --color-amber-800: #854700;
+
+  --edge-soft: #000000; /* card borders */
+  --shadow-hard: #000000; /* brutal offset shadow */
+  --well-bg: #e9e9e4;
+  --well-edge: #77776f;
+  --well-dark: #c6c6bf;
+  --well-light: #ffffff;
+  --glow: transparent;
+  --raised-edge: #b9b9b1;
+  --focus: #0088c7;
+}
+
+/* ---------- Dark: power black, neon glow ---------- */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-white: #0e0e0e;
+  --color-slate-50: #000000;
+  --color-slate-100: #181818;
+  --color-slate-200: #2c2c2c;
+  --color-slate-300: #4a4a4a;
+  --color-slate-400: #8a8a8a;
+  --color-slate-500: #a6a6a6;
+  --color-slate-600: #c4c4c4;
+  --color-slate-700: #dedede;
+  --color-slate-800: #efefef;
+  --color-slate-900: #fafafa;
+  --color-teal-50: #18230a;
+  --color-teal-300: #5f7f22;
+  --color-teal-600: #bbf351;
+  --color-teal-700: #bbf351;
+  --color-teal-800: #d6ff8f;
+  --color-emerald-50: #072414;
+  --color-emerald-500: #3ddc84;
+  --color-emerald-600: #3ddc84;
+  --color-emerald-700: #4be38f;
+  --color-emerald-800: #7befae;
+  --color-emerald-900: #b9f7d2;
+  --color-red-50: #2a0710;
+  --color-red-200: #6d1428;
+  --color-red-600: #ff2157;
+  --color-red-700: #ff5c80;
+  --color-red-800: #ff8fa8;
+  --color-red-900: #ffc2cf;
+  --color-amber-50: #2a1c02;
+  --color-amber-500: #fe9900;
+  --color-amber-700: #ffb340;
+  --color-amber-800: #ffc773;
+  --color-amber-900: #ffdca6;
+  --color-edge: #f2f2f2;
+  --color-bar: #bbf351;
+
+  --edge-soft: #333333;
+  --shadow-hard: #262626;
+  --well-bg: #121212;
+  --well-edge: #616161;
+  --well-dark: #000000;
+  --well-light: #232323;
+  --glow: rgb(187 243 81 / 0.45);
+  --raised-edge: #3d3d3d;
+  --focus: #bbf351;
 }
 
 @layer base {
   html {
     -webkit-tap-highlight-color: transparent;
+    font-feature-settings: 'zero' 0;
   }
   body {
-    @apply bg-slate-50 text-slate-900 antialiased;
+    @apply bg-slate-50 text-[15px] text-slate-900 antialiased;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: 0;
   }
   :focus-visible {
-    @apply outline-2 outline-offset-2 outline-teal-600;
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: var(--color-neon);
+    color: #000;
   }
 }
 
-/*
- * Dark mode. The app uses Tailwind's light palette everywhere; in dark mode the neutral scale is
- * flipped and the pale status tints become deep ones, so every screen gets dark mode without
- * per-component classes. Text accents get lighter shades for contrast.
- */
-:root[data-theme='dark'] {
-  color-scheme: dark;
-  --color-white: #111827;
-  --color-slate-50: #0b1220;
-  --color-slate-100: #1f2937;
-  --color-slate-200: #334155;
-  --color-slate-300: #475569;
-  --color-slate-400: #7c8aa0;
-  --color-slate-500: #a3aec0;
-  --color-slate-600: #cbd5e1;
-  --color-slate-700: #e2e8f0;
-  --color-slate-800: #f1f5f9;
-  --color-slate-900: #f8fafc;
-  --color-teal-50: #0b2e2b;
-  --color-teal-300: #1f5f59;
-  --color-emerald-50: #062a1f;
-  --color-emerald-900: #bbf7d0;
-  --color-red-50: #3a1214;
-  --color-red-200: #7f1d1d;
-  --color-red-800: #fca5a5;
-  --color-red-900: #fecaca;
-  --color-amber-50: #33270a;
-  --color-amber-800: #fcd34d;
-  --color-amber-900: #fde68a;
+/* Brutal panel: ink edge + hard offset shadow. */
+@utility brut {
+  border: 2px solid var(--edge-soft);
+  box-shadow: 4px 4px 0 0 var(--shadow-hard);
 }
-:root[data-theme='dark'] .text-teal-700 { color: #5eead4; }
-:root[data-theme='dark'] .text-teal-800 { color: #99f6e4; }
-:root[data-theme='dark'] .text-emerald-700,
-:root[data-theme='dark'] .text-emerald-800 { color: #6ee7b7; }
-:root[data-theme='dark'] .text-red-700 { color: #fca5a5; }
-:root[data-theme='dark'] .text-amber-700 { color: #fcd34d; }
-:root[data-theme='dark'] .bg-teal-700.text-white,
-:root[data-theme='dark'] .bg-teal-800.text-white { color: #ffffff; }
+/* Brutal control (buttons): stronger edge, smaller shadow, presses in when tapped. */
+@utility brut-control {
+  border: 2px solid var(--color-edge);
+  box-shadow: 3px 3px 0 0 var(--color-edge);
+  transition:
+    transform 80ms ease-out,
+    box-shadow 80ms ease-out;
+  &:active:not(:disabled) {
+    transform: translate(3px, 3px);
+    box-shadow: 0 0 0 0 var(--color-edge);
+  }
+}
+/* Neumorphic well: pressed into the surface. Used for inputs and toggle trays. */
+@utility well {
+  background-color: var(--well-bg);
+  border: 1.5px solid var(--well-edge);
+  box-shadow:
+    inset 3px 3px 6px var(--well-dark),
+    inset -3px -3px 6px var(--well-light);
+}
+/* Neumorphic raised: soft extruded control (icon buttons). */
+@utility raised {
+  background-color: var(--well-bg);
+  border: 1px solid var(--raised-edge);
+  box-shadow:
+    4px 4px 9px var(--well-dark),
+    -4px -4px 9px var(--well-light);
+  &:active:not(:disabled) {
+    box-shadow:
+      inset 3px 3px 6px var(--well-dark),
+      inset -3px -3px 6px var(--well-light);
+  }
+}
+/* Neon glow: only visible in dark mode. */
+@utility glow {
+  box-shadow:
+    3px 3px 0 0 var(--color-edge),
+    0 0 22px 2px var(--glow);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+}

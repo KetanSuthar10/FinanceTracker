@@ -62,13 +62,27 @@ export function HomePage() {
 
       {!isLoading && !error && activeAccounts.length > 0 && positions.positions && (
         <>
-          <Card title={month.isCurrent ? 'This month' : month.label}>
-            <dl className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-              <Stat label="Income" value={summary.incomePaise} tone="text-emerald-700" />
-              <Stat label="Spending" value={summary.spendingPaise} />
-              <Stat label="Saved" value={summary.savedPaise} tone={summary.savedPaise < 0 ? 'text-red-700' : 'text-slate-900'} />
+          {/* The month at a glance: the one neon block on the page. */}
+          <section aria-labelledby="month-summary" className="brut-control glow rounded-md bg-neon p-5 text-on-neon sm:p-6">
+            <h2 id="month-summary" className="text-lg leading-tight font-medium">
+              {month.isCurrent ? 'This month' : month.label}
+            </h2>
+            <dl className="mt-4 grid gap-5 sm:grid-cols-[1.4fr_1fr_1fr] sm:items-end">
+              <div className="sm:order-last">
+                <dt className="text-sm font-semibold">Saved</dt>
+                <dd className="font-display text-5xl leading-none font-semibold tracking-tight sm:text-6xl">
+                  <Money paise={summary.savedPaise} />
+                </dd>
+              </div>
+              <div className="grid grid-cols-2 gap-4 border-t-2 border-black pt-4 sm:contents">
+                <Stat label="Income" value={summary.incomePaise} prefix="+" />
+                <Stat label="Spending" value={summary.spendingPaise} prefix="−" />
+              </div>
             </dl>
-          </Card>
+            {summary.savedPaise < 0 && (
+              <p className="mt-3 text-sm font-semibold">You spent more than came in this month.</p>
+            )}
+          </section>
 
           {/* Phone: one column. Laptop: two. Wide screens: three side by side. */}
           <div className="grid items-start gap-5 lg:grid-cols-2 xl:grid-cols-3">
@@ -153,11 +167,12 @@ export function HomePage() {
   );
 }
 
-function Stat({ label, value, tone = 'text-slate-900' }: { label: string; value: number; tone?: string }) {
+function Stat({ label, value, prefix }: { label: string; value: number; prefix: string }) {
   return (
-    <div className="flex items-baseline justify-between gap-3 sm:block">
-      <dt className="text-sm text-slate-500">{label}</dt>
-      <dd className={`text-2xl font-bold ${tone}`}>
+    <div className="sm:order-first">
+      <dt className="text-sm font-semibold">{label}</dt>
+      <dd className="text-xl font-bold sm:text-2xl">
+        {value > 0 ? prefix : ''}
         <Money paise={value} />
       </dd>
     </div>
@@ -181,14 +196,14 @@ function BarList({
     <ul className="space-y-1">
       {items.map((item) => (
         <li key={item.id ?? 'none'}>
-          <Link to={href(item.id)} className="block rounded-lg px-2 py-1.5 hover:bg-slate-50">
+          <Link to={href(item.id)} className="block rounded-md px-2 py-1.5 hover:bg-slate-50">
             <span className="flex items-center justify-between gap-3 text-sm">
               <span className={'truncate ' + (item.id ? '' : 'text-amber-700')}>{name(item.id)}</span>
               <Money paise={item.amountPaise} className="font-medium" />
             </span>
-            <span className="mt-1 block h-1.5 rounded-full bg-slate-100" aria-hidden>
+            <span className="mt-1.5 block h-2 bg-slate-100 ring-1 ring-slate-300" aria-hidden>
               <span
-                className="block h-1.5 rounded-full bg-teal-600"
+                className="block h-2 bg-bar"
                 style={{ width: `${Math.max(0, (item.amountPaise / max) * 100)}%` }}
               />
             </span>

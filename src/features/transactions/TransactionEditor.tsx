@@ -263,7 +263,7 @@ export function TransactionEditor({ accounts, categories, recipients, defaultAcc
           </form>
           {speech.error && <p className="mt-2 text-sm text-red-700">{speech.error}</p>}
           {draftNotes.length > 0 && (
-            <ul className="mt-3 space-y-1 rounded-xl bg-amber-50 p-3 text-sm text-amber-900" aria-live="polite">
+            <ul className="mt-3 space-y-1 rounded-md bg-amber-50 p-3 text-sm text-amber-900" aria-live="polite">
               {draftNotes.map((n) => (
                 <li key={n}>{n}</li>
               ))}
@@ -273,7 +273,7 @@ export function TransactionEditor({ accounts, categories, recipients, defaultAcc
       )}
 
       {saved && (
-        <div role="status" className="flex items-center gap-2 rounded-xl bg-emerald-50 p-3 text-sm font-medium text-emerald-900">
+        <div role="status" className="flex items-center gap-2 rounded-md bg-emerald-50 p-3 text-sm font-medium text-emerald-900">
           <CircleCheck className="size-5 shrink-0" aria-hidden />
           {saved}
         </div>

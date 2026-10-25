@@ -119,7 +119,8 @@ Computer (1024px and wider): the same screens with a left sidebar instead of bot
 
 ## UI guidelines
 
-- Light theme, one accent colour, neutral greys; dark mode follows the device or a setting.
+- Look: "concrete + neon" — cards with ink edges and hard shadows, inputs pressed into the surface, Oswald headings, monospaced text and numbers, neon lime for the main action, the current page and the month summary.
+- Light (concrete and ink) and dark (black with neon glow) modes; follows the device, or switch with the sun/moon button (sidebar, More, sign-in) or in Settings.
 - Big, readable amounts in Indian format: ₹1,20,000.50.
 - Every list has an empty state that says what to do next ("No transactions yet — tap + to add one").
 - Loading and error states on every screen; a failed save keeps what you typed.

@@ -81,7 +81,7 @@ export function UpcomingPage() {
               <ul className="-mx-2">
                 {items.map((item) => (
                   <li key={item.id}>
-                    <Link to={`/recurring/${item.id}`} className="flex items-center gap-3 rounded-xl px-2 py-2.5 hover:bg-slate-50">
+                    <Link to={`/recurring/${item.id}`} className="flex items-center gap-3 rounded-md px-2 py-2.5 hover:bg-slate-50">
                       <span className="min-w-0 flex-1">
                         <span className="block truncate font-medium">{item.name}</span>
                         <span className="block truncate text-sm text-slate-500">
@@ -135,7 +135,7 @@ function EntryRow({
         {outstandingPaise > 0 && (
           <ButtonLink
             variant="secondary"
-            className="min-h-9 px-3"
+            className="min-h-9 w-full px-3 sm:w-auto"
             to={`/add?type=transfer&to=${account.id}&amount=${paiseToInputText(outstandingPaise)}`}
           >
             Record payment

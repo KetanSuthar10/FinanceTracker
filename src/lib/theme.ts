@@ -16,7 +16,8 @@ export function getThemePreference(): ThemePreference {
 export function applyTheme(pref: ThemePreference = getThemePreference()) {
   const dark = pref === 'dark' || (pref === 'system' && media().matches);
   document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#0f172a' : '#0f766e');
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#000000' : '#e3e3de');
+  window.dispatchEvent(new Event('themechange'));
 }
 
 export function setThemePreference(pref: ThemePreference) {
