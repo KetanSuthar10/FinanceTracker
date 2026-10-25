@@ -1,5 +1,26 @@
 # One-time setup (owner)
 
+There are two ways to set up. **Quick start** takes about 10 minutes and needs no Google or GitHub setup. The **full setup** (sections 1–5 below) adds Google sign-in and automatic deploys from GitHub; you can do it later without losing data.
+
+## Quick start: email + password, Netlify drag-and-drop
+
+1. **Database.** Create the Supabase project as in section 1.1 below. Then SQL Editor → New query → paste the whole of `supabase/finance-tracker-database-setup.sql` (all four migrations in one all-or-nothing transaction) → **Run**. Expected last line: **Setup complete | 9**. (Pasting the four files in `supabase/migrations/` one by one, in order, does the same.)
+2. **Your login.** Supabase → **Authentication → Users → Add user → Create new user**. Enter your email and a strong password, tick **Auto Confirm User**, and create.
+3. **Lock the door.** Supabase → **Authentication → Sign In / Providers**: keep **Email** on, and turn **off "Allow new users to sign up"**. Save. The app has no sign-up screen; this also blocks sign-ups through the API.
+4. **Build with your two public values** (Project URL and publishable key, section 1.3):
+   ```bash
+   cp .env.example .env.local      # paste the two values
+   npm install && npm run build    # creates dist/
+   ```
+5. **Deploy.** Go to https://app.netlify.com/drop and drag the `dist` folder (or a zip of its contents) onto the page. `_redirects` and `_headers` inside it set up page routing and security headers.
+6. Open the Netlify URL → sign in with the email and password from step 2.
+
+To change the Supabase values later, build again and drop the new `dist`. When you later connect Netlify to GitHub, `netlify.toml` sets the build; add the two variables under Site configuration → Environment variables.
+
+---
+
+## Full setup
+
 About 30 minutes, done once. You never need to share passwords or secret keys with anyone, including an AI assistant. Dashboard menu names may differ slightly from what's written here; look for the closest match.
 
 You will end up with three things connected:
@@ -43,7 +64,7 @@ Google (sign-in)  →  Supabase (database + auth)  →  Vercel (the website)
 4. Back in Supabase → **Authentication → Sign In / Providers → Google**:
    - Enable it, paste the Client ID and Client secret, and save.
    - The secret stays inside Supabase. It never goes into the app or Git.
-5. Supabase → **Authentication → Sign In / Providers → Email**: turn the Email provider **off**. Sign-in is Google only.
+5. Optional: if you only want Google sign-in, turn the **Email** provider **off** in Supabase → Authentication → Sign In / Providers. The sign-in screen then shows only the Google button.
 6. Supabase → **Authentication → URL Configuration**:
    - **Site URL:** your Vercel URL.
    - **Redirect URLs:** add your Vercel URL and `http://localhost:5173`.

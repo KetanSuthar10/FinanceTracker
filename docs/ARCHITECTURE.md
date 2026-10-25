@@ -14,7 +14,7 @@ Small, boring, standard. Prefer a well-known library over custom code.
 | Charts | None — plain CSS bars with numbers | Category bars, budgets, 6-month trend (see DECISIONS #12) |
 | Spreadsheet import | Papa Parse (CSV), read-excel-file (.xlsx) | Maintained parsers, run in the browser; .xls not supported (DECISIONS #16) |
 | Voice | Browser Web Speech API (`en-IN`) | No server, no cost; falls back to the phone keyboard mic |
-| Database + auth | Supabase (Postgres + Google sign-in) | Free tier is enough; row-level security |
+| Database + auth | Supabase (Postgres + email/password or Google sign-in) | Free tier is enough; row-level security |
 | Hosting | Vercel | Static site; already in use |
 | Tests | Vitest + PGlite | Money rules, parser, import matching; the real SQL migrations run in PGlite (Postgres in WebAssembly) to test constraints and row-level security without Docker |
 
@@ -164,8 +164,8 @@ The real schema is in `supabase/migrations/`; the sketch above is a summary.
 
 ## Auth and security
 
-- **Google sign-in only** through Supabase Auth. There is no email/password.
-- **Single user:** sign in once to create your user, then turn off "Allow new users to sign up" in Supabase Auth settings. RLS also means that any other account would only ever see its own empty data.
+- **Sign-in through Supabase Auth:** email + password for the one owner account (created in the Supabase dashboard; the app never offers sign-up), and Google when it is switched on. The sign-in screen reads Supabase's public `/auth/v1/settings` and only shows the Google button when Google is enabled.
+- **Single user:** create your user (or sign in with Google once), then turn off "Allow new users to sign up" in Supabase Auth settings. RLS also means that any other account would only ever see its own empty data.
 - The frontend uses `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`. These are public by design; RLS is the protection.
   - There is no hardcoded fallback. If they are missing, show a "not configured" screen.
 - **Never** put the Supabase service-role key, or any secret key, in the frontend or in Git.

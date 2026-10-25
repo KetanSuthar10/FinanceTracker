@@ -3,6 +3,7 @@ import type { Session } from '@supabase/supabase-js';
 import { getSupabase } from '../../lib/supabase';
 import { queryClient } from '../../lib/queryClient';
 import { AuthContext, type AuthState } from './authContext';
+import { passwordSignInMessage } from './messages';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
@@ -40,6 +41,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           options: { redirectTo: window.location.origin },
         });
         if (error) throw error;
+      },
+      async signInWithPassword(email, password) {
+        const { error } = await getSupabase().auth.signInWithPassword({ email: email.trim(), password });
+        if (error) throw new Error(passwordSignInMessage(error.message));
       },
       async signOut() {
         // Clear cached financial data first so nothing lingers if sign-out is slow or fails.

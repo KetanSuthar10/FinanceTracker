@@ -1,0 +1,12 @@
+# Netlify security and caching headers (same as vercel.json)
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), geolocation=(), microphone=(self)
+
+/sw.js
+  Cache-Control: no-cache
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable

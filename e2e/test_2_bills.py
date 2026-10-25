@@ -93,7 +93,8 @@ with sync_playwright() as p:
     shot('02-upcoming')
 
     # 3. Mark rent as paid
-    page.get_by_role('link', name='Mark as paid').first.click()
+    # Pick Rent's own row: near the end of a month Rent and the EMI can fall on the same day.
+    page.locator('li', has_text='Rent').filter(has=page.get_by_role('link', name='Mark as paid')).get_by_role('link', name='Mark as paid').click()
     expect(page.get_by_role('heading', name='Pay Rent')).to_be_visible()
     check('pay form pre-filled', page.get_by_label('Amount (₹)').input_value() == '15000')
     shot('03-pay')

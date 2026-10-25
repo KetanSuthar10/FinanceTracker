@@ -27,4 +27,5 @@ Screenshots are written to `e2e/out/` (ignored by Git). All data here is synthet
 | `test_3_import.py` | CSV and .xlsx statement import, mapping memory, duplicates, undo, PDF refusal |
 | `test_4_backup.py` | Backup download, CSV export, restore into an empty app, tampered backup |
 | `test_5_polish.py` | Dark mode, offline banner and offline reload, service worker caches, icons, skip link |
+| `test_7_signin.py` | Email + password sign-in, plain errors, Google button only when switched on, the database-not-set-up message |
 | `test_6_desktop.py` | Computer layout: N and / shortcuts, transactions table, Add side panel, Home columns, import table, no sideways scrolling (computer widths only) |

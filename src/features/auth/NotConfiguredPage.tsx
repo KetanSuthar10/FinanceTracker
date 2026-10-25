@@ -11,8 +11,8 @@ export function NotConfiguredPage({ problem }: { problem: string }) {
         <p className="mt-2 text-sm text-slate-600">{problem}</p>
         <p className="mt-4 text-sm text-slate-600">
           Add your Supabase project URL and publishable key as environment variables (in{' '}
-          <code className="rounded bg-slate-100 px-1">.env.local</code> locally, or in Vercel's project settings), then
-          reload. The steps are in <code className="rounded bg-slate-100 px-1">docs/SETUP.md</code>.
+          <code className="rounded bg-slate-100 px-1">.env.local</code> locally, or in your host's settings — Netlify or
+          Vercel), then build and deploy again. The steps are in <code className="rounded bg-slate-100 px-1">docs/SETUP.md</code>.
         </p>
       </div>
     </main>

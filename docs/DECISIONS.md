@@ -27,6 +27,8 @@ Short log of choices and why. Add a line when something changes.
 | 19 | 2026-10-22 | Dark mode by remapping Tailwind's colour variables, not per-component `dark:` classes | Every screen gets dark mode from one CSS block; the theme choice is a device setting in localStorage (not financial data) |
 | 20 | 2026-10-22 | Browser tests (Python Playwright + in-memory Supabase imitation) kept in `e2e/`, not in CI | They check whole flows and exact figures; CI already runs unit + real-SQL database tests |
 | 21 | 2026-10-22 | On computers (≥1024px) lists become tables via `useIsDesktop`, rendering one layout or the other instead of hiding with CSS; shortcuts N and / only | One copy of each row in the page (no hidden duplicates for screen readers or tests); phone layout untouched. Shortcuts ignore typing in fields and modifier keys, so they never clash with the browser |
+| 22 | 2026-10-25 | Email + password sign-in added; Google stays optional and its button shows only when enabled in Supabase. The owner account is created in the dashboard and sign-ups stay off | Google OAuth setup was the slowest part of getting started. RLS is unchanged, so data is just as private; this replaces "Google only" from #7 |
+| 23 | 2026-10-25 | Netlify supported alongside Vercel: `public/_redirects` and `public/_headers` (same headers as `vercel.json`) plus `netlify.toml` | Lets the built `dist/` folder be drag-and-dropped onto Netlify before GitHub is set up; the files are ignored by Vercel |
 
 ## Open — needed before the phase shown
 

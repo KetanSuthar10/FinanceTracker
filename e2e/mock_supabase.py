@@ -3,7 +3,7 @@ In-memory stand-in for the parts of Supabase's REST API the app uses, for browse
 Not shipped with the app. Mirrors: filters eq/neq/gte/lte/is, order, offset/limit,
 single/maybeSingle, insert/update/delete with return=representation, upsert, rpc.
 """
-import json, uuid, datetime
+import json, uuid, datetime, base64, time
 from urllib.parse import urlparse, parse_qsl
 
 USER_ID = '11111111-1111-1111-1111-111111111111'
@@ -178,13 +178,33 @@ class MockSupabase:
             return 200, {'batch_id': args['p_batch_id'], 'added': len(new_rows), 'already_done': False}
         return self.err(404, 'PGRST202', f'Could not find the function {name}')
 
+    # -- auth: public settings and email + password sign-in --------------
+    PASSWORD = ('owner@example.com', 'correct-horse-42')
+    google_enabled = False
+
+    def auth(self, method, path, query, body):
+        if path == '/auth/v1/settings':
+            return 200, {'external': {'email': True, 'google': self.google_enabled}, 'disable_signup': True}
+        if path == '/auth/v1/token' and 'grant_type=password' in query:
+            creds = json.loads(body or '{}')
+            if (creds.get('email'), creds.get('password')) != self.PASSWORD:
+                return 400, {'code': 'invalid_credentials', 'error_code': 'invalid_credentials', 'msg': 'Invalid login credentials',
+                             'message': 'Invalid login credentials'}
+            exp = int(time.time()) + 3600
+            b64 = lambda d: base64.urlsafe_b64encode(json.dumps(d).encode()).decode().rstrip('=')
+            token = 'eyJhbGciOiJIUzI1NiJ9.' + b64({'sub': USER_ID, 'role': 'authenticated', 'exp': exp}) + '.sig'
+            return 200, {'access_token': token, 'refresh_token': 'r', 'token_type': 'bearer', 'expires_in': 3600, 'expires_at': exp,
+                         'user': {'id': USER_ID, 'email': creds['email'], 'aud': 'authenticated', 'role': 'authenticated',
+                                  'app_metadata': {}, 'user_metadata': {}, 'created_at': '2026-10-21T00:00:00Z'}}
+        return 204, None
+
     # -- main entry --------------------------------------------------------
     def handle(self, method, url, headers, body):
         u = urlparse(url)
         path = u.path
         self.log.append((method, path))
         if path.startswith('/auth/v1/'):
-            return 204, None
+            return self.auth(method, path, u.query, body)
         if not path.startswith('/rest/v1/'):
             return 404, {'message': 'not found'}
         name = path[len('/rest/v1/'):]

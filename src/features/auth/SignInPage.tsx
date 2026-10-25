@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { IndianRupee } from 'lucide-react';
 import { Button } from '../../components/Button';
 import { ErrorNotice } from '../../components/ErrorNotice';
+import { Field, TextInput } from '../../components/form';
+import { supabaseConfig } from '../../lib/supabase';
 import { useAuth } from './authContext';
+import { readSignInMethods, type SignInMethods } from './messages';
 
 /** Supabase sends errors back on the URL (query or hash) after a failed Google sign-in. */
 function readRedirectError(): string | null {
@@ -16,24 +19,61 @@ function readRedirectError(): string | null {
   return message.replace(/\+/g, ' ');
 }
 
-export function SignInPage() {
-  const { signInWithGoogle } = useAuth();
-  const [error, setError] = useState<string | null>(readRedirectError);
-  const [isStarting, setIsStarting] = useState(false);
+/** Shows the Google button only when Google sign-in is switched on in Supabase. */
+function useSignInMethods(): SignInMethods {
+  const [methods, setMethods] = useState<SignInMethods>({ email: true, google: false });
+  useEffect(() => {
+    if (!supabaseConfig.ok) return;
+    let active = true;
+    fetch(`${supabaseConfig.url}/auth/v1/settings`, { headers: { apikey: supabaseConfig.key } })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((json) => active && json && setMethods(readSignInMethods(json)))
+      .catch(() => undefined); // Offline or blocked: keep email + password, which is always shown.
+    return () => {
+      active = false;
+    };
+  }, []);
+  return methods;
+}
 
-  async function handleSignIn() {
+export function SignInPage() {
+  const { signInWithGoogle, signInWithPassword } = useAuth();
+  const methods = useSignInMethods();
+  const [error, setError] = useState<string | null>(readRedirectError);
+  const [busy, setBusy] = useState<'google' | 'password' | null>(null);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  async function handleGoogle() {
     setError(null);
-    setIsStarting(true);
+    setBusy('google');
     try {
       await signInWithGoogle();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not start Google sign-in.');
-      setIsStarting(false);
+      setBusy(null);
+    }
+  }
+
+  async function handlePassword(e: FormEvent) {
+    e.preventDefault();
+    setError(null);
+    if (!email.trim() || !password) {
+      setError('Enter your email and password.');
+      return;
+    }
+    setBusy('password');
+    try {
+      await signInWithPassword(email, password);
+      // On success the auth listener swaps this page for the app.
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Sign-in didn’t work.');
+      setBusy(null);
     }
   }
 
   return (
-    <main className="flex min-h-dvh items-center justify-center px-4">
+    <main className="flex min-h-dvh items-center justify-center px-4 py-8">
       <div className="w-full max-w-sm">
         <div className="mb-8 flex flex-col items-center text-center">
           <div className="mb-4 flex size-14 items-center justify-center rounded-2xl bg-teal-700 text-white">
@@ -45,10 +85,44 @@ export function SignInPage() {
 
         <div className="space-y-4 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
           {error && <ErrorNotice title="Sign-in didn't work">{error}</ErrorNotice>}
-          <Button className="w-full" onClick={handleSignIn} disabled={isStarting}>
-            <GoogleMark />
-            {isStarting ? 'Opening Google…' : 'Continue with Google'}
-          </Button>
+
+          {methods.email && (
+            <form onSubmit={handlePassword} className="space-y-4" noValidate>
+              <Field label="Email">
+                {(id) => (
+                  <TextInput id={id} type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} />
+                )}
+              </Field>
+              <Field label="Password">
+                {(id) => (
+                  <TextInput
+                    id={id}
+                    type="password"
+                    autoComplete="current-password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                )}
+              </Field>
+              <Button type="submit" className="w-full" disabled={busy !== null}>
+                {busy === 'password' ? 'Signing in…' : 'Sign in'}
+              </Button>
+            </form>
+          )}
+
+          {methods.google && (
+            <>
+              {methods.email && (
+                <div className="flex items-center gap-3 text-xs text-slate-500" aria-hidden>
+                  <span className="h-px flex-1 bg-slate-200" /> or <span className="h-px flex-1 bg-slate-200" />
+                </div>
+              )}
+              <Button variant={methods.email ? 'secondary' : 'primary'} className="w-full" onClick={handleGoogle} disabled={busy !== null}>
+                <GoogleMark />
+                {busy === 'google' ? 'Opening Google…' : 'Continue with Google'}
+              </Button>
+            </>
+          )}
           <p className="text-center text-xs text-slate-500">Private app — only the owner's account can sign in.</p>
         </div>
       </div>

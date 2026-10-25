@@ -9,6 +9,11 @@ export function friendlyError(error: PostgrestError | Error | null | undefined, 
   if (code === '23505') return new Error('That name is already used. Pick a different one.');
   if (code === '23503') return new Error("It's still used by other records, so it can't be removed. Archive it instead.");
   if (code === '23514') return new Error('Some values are not allowed. Check the form and try again.');
+  if (code === 'PGRST202' || code === 'PGRST205' || code === '42P01' || code === '42883' || /schema cache/i.test(message)) {
+    return new Error(
+      'The database isn’t set up yet. In Supabase, run the setup SQL (supabase/finance-tracker-database-setup.sql) in the SQL Editor, then reload.',
+    );
+  }
   if (code === 'PGRST301' || /jwt|expired/i.test(message)) return new Error('Your session has expired. Sign in again.');
   if (/failed to fetch|networkerror|load failed/i.test(message)) {
     return new Error("Can't reach the server. Check your internet connection and try again.");

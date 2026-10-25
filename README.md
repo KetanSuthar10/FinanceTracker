@@ -13,12 +13,12 @@ A simple personal finance app for one person in India. Add expenses by typing or
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Stack, folders, database tables, security |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | Phases, checklists and current status |
 | [docs/DECISIONS.md](docs/DECISIONS.md) | Why things are the way they are, and open questions |
-| [docs/SETUP.md](docs/SETUP.md) | One-time owner setup: Supabase, Google sign-in, Vercel |
+| [docs/SETUP.md](docs/SETUP.md) | One-time owner setup: Supabase, sign-in, Netlify or Vercel |
 | [AGENTS.md](AGENTS.md) | Rules for AI coding assistants working on this repo |
 
 ## Stack
 
-React · TypeScript · Vite · Tailwind · TanStack Query · Supabase (Postgres + Google sign-in) · Vercel
+React · TypeScript · Vite · Tailwind · TanStack Query · Supabase (Postgres + Auth) · Netlify or Vercel
 
 ## Running locally
 

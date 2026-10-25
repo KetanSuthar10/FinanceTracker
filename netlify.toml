@@ -1,0 +1,8 @@
+# Used when Netlify builds from GitHub. Headers and redirects live in public/_headers and public/_redirects,
+# so they also work for drag-and-drop deploys of the built dist/ folder.
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"

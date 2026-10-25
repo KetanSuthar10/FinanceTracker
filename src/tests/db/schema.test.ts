@@ -217,3 +217,21 @@ class RollbackSignal extends Error {}
 function ignoreRollback(error: unknown) {
   if (!(error instanceof RollbackSignal)) throw error;
 }
+
+describe('one-file setup SQL', () => {
+  it('contains every migration, in order, inside one transaction', async () => {
+    const { readdirSync, readFileSync } = await import('node:fs');
+    const { join } = await import('node:path');
+    const dir = join(import.meta.dirname, '../../../supabase');
+    const combined = readFileSync(join(dir, 'finance-tracker-database-setup.sql'), 'utf8');
+    const files = readdirSync(join(dir, 'migrations')).filter((f) => f.endsWith('.sql')).sort();
+    let at = combined.indexOf('\nbegin;');
+    expect(at).toBeGreaterThan(-1);
+    for (const f of files) {
+      const next = combined.indexOf(readFileSync(join(dir, 'migrations', f), 'utf8'), at);
+      expect(next, `${f} missing or out of order — regenerate the setup file`).toBeGreaterThan(at);
+      at = next;
+    }
+    expect(combined.indexOf('\ncommit;', at)).toBeGreaterThan(at);
+  });
+});
