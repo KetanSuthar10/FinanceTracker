@@ -257,7 +257,7 @@ export function TransactionEditor({ accounts, categories, recipients, defaultAcc
             </div>
             <p id="quick-hint" className="mt-2 text-sm text-slate-500">
               {speech.listening
-                ? 'Listening… say something like "450 groceries yesterday".'
+                ? 'Listening… say the whole thing, e.g. "paid 450 for groceries at DMart yesterday from HDFC". Pause when you’re done.'
                 : 'Try "450 groceries yesterday", "got 50k salary" or "transfer 2000 hdfc to cash". You can check everything before saving.'}
             </p>
           </form>

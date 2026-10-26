@@ -90,6 +90,7 @@ How it was checked: a browser run at both widths covered dark mode colours, them
 - [ ] "Explain my month" button on Home — read-only text, no writes
 
 ## Change log
+- 2026-10-26: Voice keeps listening for whole sentences (stops after a 2.5 s pause, tap stop, or 30 s); a network hiccup is retried once, with a clear message when the browser can't reach its speech service. Quick add understands longer sentences (spoken day numbers, shop vs category words, remembered recipients inside a sentence).
 - 2026-10-25: Redesign — brutalist cards, neumorphic inputs, Oswald + JetBrains Mono, neon lime accent; new light/dark palettes and app icon; quick light/dark switch.
 - 2026-10-25: Email + password sign-in (Google optional, shown only when switched on); Netlify deploy files; a plain "database isn't set up yet" message instead of a raw error.
 - 2026-10-22: Computer-friendly layout: tables for transactions and statement review, multi-column Home and other pages, Add side panel, N and / shortcuts. Fixed search losing keystrokes while typing fast.

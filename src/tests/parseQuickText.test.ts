@@ -223,3 +223,60 @@ describe('parseQuickText — transfer notes', () => {
     expect(parseQuickText('paid card bill 300', ctx).note).toBe('');
   });
 });
+
+describe('long spoken sentences (up to 10+ words)', () => {
+  it('splits category words from the shop name', () => {
+    const d = parse('paid four hundred fifty rupees for groceries at dmart yesterday from hdfc');
+    expect(d).toMatchObject({ type: 'expense', amountPaise: 45000, date: '2026-10-20', accountId: 'hdfc', categoryId: 'groceries' });
+    expect(d.recipientName).toBe('Dmart');
+    expect(parse('i spent 1200 on fuel at the indian oil pump today using amazon card')).toMatchObject({
+      amountPaise: 120000,
+      accountId: 'icici-card',
+      recipientName: 'Indian Oil Pump',
+      categoryId: 'fuel',
+    });
+  });
+
+  it('understands spoken day numbers when they are clearly dates', () => {
+    expect(parse('got my salary of fifty thousand in sbi on the first of this month')).toMatchObject({
+      type: 'income',
+      amountPaise: 5_000_000,
+      date: '2026-10-01',
+      accountId: 'sbi',
+      recipientName: 'Salary',
+    });
+    expect(parse('paid rent of eighteen thousand rupees to the landlord from hdfc on the twenty second of last month')).toMatchObject({
+      amountPaise: 1_800_000,
+      date: '2026-09-22',
+      recipientName: 'Landlord',
+      categoryId: 'rent',
+    });
+    expect(parse('first time at the new cafe spent 200').date).toBe(TODAY);
+  });
+
+  it('finds a remembered recipient inside a longer sentence and keeps the rest as a note', () => {
+    expect(parse('bought shoes worth 2500 from amazon using the amazon card last sunday')).toMatchObject({
+      amountPaise: 250000,
+      date: '2026-10-18',
+      accountId: 'icici-card',
+      recipientId: 'amz',
+      categoryId: 'shopping',
+      note: 'shoes',
+    });
+    expect(parse('had coffee at third wave for 320 with friends on the fifth')).toMatchObject({
+      amountPaise: 32000,
+      date: '2026-10-05',
+      recipientId: 'twc',
+      note: 'coffee friends',
+    });
+  });
+
+  it('long transfers still find both accounts', () => {
+    expect(parse('transferred two thousand from hdfc savings to my wallet for cash yesterday')).toMatchObject({
+      type: 'transfer',
+      amountPaise: 200000,
+      accountId: 'hdfc',
+      toAccountId: 'wallet',
+    });
+  });
+});

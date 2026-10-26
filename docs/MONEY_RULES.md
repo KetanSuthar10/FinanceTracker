@@ -123,14 +123,16 @@ The parser only makes a **draft**. It never guesses silently. Anything it is uns
 | `refund 500 amazon` | refund ₹500, recipient "amazon" |
 | `transfer 2000 hdfc to cash` / `withdrew 2000` | transfer ₹2,000; missing from/to accounts are left for the user |
 | `paid card bill 8000` | transfer ₹8,000 to the card account; from = default bank |
+| `paid four hundred fifty for groceries at dmart yesterday from hdfc` | expense ₹450, category Groceries, recipient "dmart", account matching "hdfc", yesterday |
+| `bought shoes worth 2500 from amazon` (Amazon remembered) | expense ₹2,500, recipient Amazon with its remembered category, note "shoes" |
 | `coffee` (no amount) | amount empty → the form asks for it. **Never invent an amount.** |
 
 Rules:
 - Amount: digits with optional `₹`, `rs`, `rupees`, Indian or Western commas, decimals, `k` = thousand, `lakh`/`l` = 1,00,000. Spoken numbers are understood too: "two hundred fifty", "one thousand five hundred and fifty", "one lakh twenty thousand", "a hundred". A lone small word ("one coffee") is only an amount when followed by "rupees".
-- Date words: `today` (default), `yesterday`, `day before yesterday`, weekday names (most recent past one), `on 5th`.
+- Date words: `today` (default), `yesterday`, `day before yesterday`, weekday names (most recent past one), `on 5th`, spoken days when clearly a date (`on the first`, `the twenty second of last month`, `5th of this month`).
 - `upi`, `gpay`, `phonepe`, `paytm` are **payment methods, not accounts**. Use the default account set in Settings. If there is none, leave the account empty.
 - Account words: match account names and nicknames, case-insensitive.
 - Category: from recipient memory, if the remembered category fits the type (an expense memory is never applied to income). Otherwise, if one of the words is a category name (e.g. "groceries", "rent", "fee" → *Fees & interest*, "food" → *Food & dining*), that category. Otherwise empty, and the user picks one.
-- Recipient: the words left over after removing the amount, date, type words, filler words, payment methods and account words. A new recipient keeps the user's own capitalisation ("DMart"). Transfers have no recipient; their leftover words become the note.
+- Recipient: the words left over after removing the amount, date, type words, filler words, payment methods and account words. If a remembered recipient's name or alias appears among them, that recipient is used and the other words become the note. Otherwise, a word that set the category is left out of the name when other words remain ("groceries at dmart" → recipient "dmart", category Groceries). A new recipient keeps the user's own capitalisation ("DMart"). Transfers have no recipient; their leftover words become the note.
 - When there is more than one number, an amount marked with ₹/rs/k/lakh wins. Otherwise the first number is used and a "check the amount" warning is shown.
 - Dates: `5/10` and `05-10-2026` are day/month (Indian style). A day/month without a year that would be in the future means last year.

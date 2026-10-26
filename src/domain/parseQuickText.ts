@@ -60,6 +60,32 @@ function dayOfMonthOnOrBefore(today: string, day: number): string | null {
   return Number(lastMonth.slice(8)) === day ? lastMonth : null;
 }
 
+const ORDINAL_WORDS: Record<string, number> = {
+  first: 1, second: 2, third: 3, fourth: 4, fifth: 5, sixth: 6, seventh: 7, eighth: 8, ninth: 9, tenth: 10,
+  eleventh: 11, twelfth: 12, thirteenth: 13, fourteenth: 14, fifteenth: 15, sixteenth: 16, seventeenth: 17,
+  eighteenth: 18, nineteenth: 19, twentieth: 20, thirtieth: 30,
+};
+const ORDINAL_RE = new RegExp(
+  `\\b(?:(twenty|thirty)[ -])?(${Object.keys(ORDINAL_WORDS).join('|')})\\b`,
+  'g',
+);
+const SUFFIX = (n: number) => (n % 10 === 1 && n !== 11 ? 'st' : n % 10 === 2 && n !== 12 ? 'nd' : n % 10 === 3 && n !== 13 ? 'rd' : 'th');
+
+/**
+ * Spoken day numbers: "on the first", "the twenty second of last month" → "on 1st", "22nd of last month".
+ * Only when it is clearly a date ("on (the) …" or "… of this/last month"), so "first time" stays words.
+ */
+export function ordinalDaysToDigits(text: string): string {
+  return text.replace(ORDINAL_RE, (match, tens: string | undefined, unit: string, offset: number, whole: string) => {
+    const before = whole.slice(0, offset);
+    const after = whole.slice(offset + match.length);
+    if (!/\bon (?:the )?$/.test(before) && !/^ of (?:this|last) month\b/.test(after)) return match;
+    const day = (tens === 'twenty' ? 20 : tens === 'thirty' ? 30 : 0) + ORDINAL_WORDS[unit]!;
+    if (day > 31 || (tens && ORDINAL_WORDS[unit]! > 9)) return match;
+    return `${day}${SUFFIX(day)}`;
+  });
+}
+
 function extractDate(text: string, today: string, hasOtherNumber: (without: string) => boolean) {
   const rules: { re: RegExp; resolve: (m: RegExpExecArray) => string | null }[] = [
     { re: /\bday before yesterday\b/, resolve: () => addDays(today, -2) },
@@ -88,7 +114,21 @@ function extractDate(text: string, today: string, hasOtherNumber: (without: stri
         return iso;
       },
     },
-    { re: /\b(?:on )?(\d{1,2})(?:st|nd|rd|th)\b/, resolve: (m) => dayOfMonthOnOrBefore(today, Number(m[1])) },
+    {
+      re: /\b(?:on )?(?:the )?(\d{1,2})(?:st|nd|rd|th)? of last month\b/,
+      resolve: (m) => {
+        const iso = addMonths(`${today.slice(0, 8)}01`, -1, Number(m[1]));
+        return Number(iso.slice(8)) === Number(m[1]) ? iso : null;
+      },
+    },
+    {
+      re: /\b(?:on )?(?:the )?(\d{1,2})(?:st|nd|rd|th)? of this month\b/,
+      resolve: (m) => {
+        const iso = `${today.slice(0, 8)}${String(Number(m[1])).padStart(2, '0')}`;
+        return isValidISODate(iso) && iso <= today ? iso : null;
+      },
+    },
+    { re: /\b(?:on )?(?:the )?(\d{1,2})(?:st|nd|rd|th)\b/, resolve: (m) => dayOfMonthOnOrBefore(today, Number(m[1])) },
   ];
 
   for (const { re, resolve } of rules) {
@@ -243,6 +283,9 @@ const FILLER = new Set([
   'got', 'received', 'receive', 'credited', 'earned', 'income', 'refund', 'refunded', 'reversal', 'reversed',
   'transfer', 'transferred', 'moved', 'move', 'withdrew', 'withdraw', 'withdrawal', 'withdrawn', 'atm',
   'payment', 'credit', 'expense', 'today', 'yesterday', 'and',
+  // natural speech: "I spent…", "worth", "this month", "just"
+  'i', 'me', 'we', 'our', 'it', 'is', 'was', 'just', 'had', 'did', 'ordered', 'purchased', 'worth', 'towards',
+  'into', 'this', 'that', 'month', 'some', 'total', 'amount', 'cost', 'costs',
 ]);
 
 function stem(word: string): string {
@@ -266,12 +309,26 @@ function categoryFromWords(words: string[], categories: ParseContext['categories
   });
 }
 
+/**
+ * The longest run of words that is a known recipient's name or alias: "shoes from amazon" → Amazon,
+ * with the other words ("shoes") kept as a note.
+ */
+function findRecipientWithin(words: string[], recipients: ParseContext['recipients']) {
+  for (let length = words.length; length >= 1; length--) {
+    for (let start = 0; start + length <= words.length; start++) {
+      const recipient = findRecipient(words.slice(start, start + length).join(' '), recipients);
+      if (recipient) return { recipient, rest: [...words.slice(0, start), ...words.slice(start + length)] };
+    }
+  }
+  return null;
+}
+
 // ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
 export function parseQuickText(input: string, ctx: ParseContext): QuickDraft {
   const warnings: string[] = [];
-  let text = ` ${numberWordsToDigits(input.toLowerCase().replace(/\s+/g, ' ').trim())} `;
+  let text = ` ${numberWordsToDigits(ordinalDaysToDigits(input.toLowerCase().replace(/\s+/g, ' ').trim()))} `;
 
   const dateResult = extractDate(text, ctx.today, (rest) => /\d/.test(rest));
   text = dateResult.text;
@@ -343,20 +400,25 @@ export function parseQuickText(input: string, ctx: ParseContext): QuickDraft {
   if (type === 'transfer') {
     note = words.filter((w) => !['bill', 'cc', 'card'].includes(w)).join(' ');
   } else if (words.length > 0) {
-    const phrase = words.join(' ');
-    const known = findRecipient(phrase, ctx.recipients);
-    if (known) {
+    const knownMatch = findRecipientWithin(words, ctx.recipients);
+    if (knownMatch) {
+      const known = knownMatch.recipient;
       recipientName = known.name;
       recipientId = known.id;
+      note = knownMatch.rest.join(' ');
       const remembered = ctx.categories.find((c) => c.id === known.default_category_id && !c.archived);
       if (remembered && remembered.kind === kind) categoryId = remembered.id;
     } else {
+      // "groceries at dmart": the category word sets the category, the other words name the recipient.
+      const category = kind ? categoryFromWords(words, ctx.categories, kind) : undefined;
+      const nameWords = category ? words.filter((w) => !categoryFromWords([w], [category], category.kind)) : words;
+      const chosen = nameWords.length > 0 ? nameWords : words;
       // Recover the words as typed, so "DMart" stays "DMart".
       const typed = new Map<string, string>();
       for (const word of input.replace(/[^\p{L}\p{N}\s&]/gu, ' ').split(/\s+/)) {
         if (word && !typed.has(word.toLowerCase())) typed.set(word.toLowerCase(), word);
       }
-      recipientName = toDisplayName(words.map((w) => typed.get(w) ?? w).join(' '));
+      recipientName = toDisplayName(chosen.map((w) => typed.get(w) ?? w).join(' '));
     }
     if (!categoryId && kind) categoryId = categoryFromWords(words, ctx.categories, kind)?.id ?? null;
   }

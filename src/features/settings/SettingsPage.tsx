@@ -81,6 +81,10 @@ export function SettingsPage() {
               speech service. Only that sentence is sent — never your balances or transactions. You can always check and edit
               the text before saving, or use your phone keyboard’s own mic instead.
             </p>
+            <p className="mt-2 text-sm text-slate-600">
+              Works in Chrome, Edge and Safari. Brave, Opera and some other browsers — or a VPN or ad-blocker — can block
+              the speech service. Speak the whole entry; it stops listening when you pause for a couple of seconds.
+            </p>
           </Card>
         </div>
       )}
